@@ -1,19 +1,22 @@
 package com.app.jetpack.utils
 
 import android.content.ComponentName
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.ActivityNavigator
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph
 import androidx.navigation.NavGraphNavigator
-import androidx.navigation.fragment.FragmentNavigator
+import com.app.jetpack.navigator.MainFragmentNavigator
 import com.app.lib_common.app.AppGlobals
 
 object NavGraphBuilder {
-    fun build(navController: NavController) {
+    fun build(navController: NavController, activity: FragmentActivity, containerId: Int) {
         val provider = navController.navigatorProvider
         val navGraph = NavGraph(NavGraphNavigator(provider))
 
-        val fragmentNavigator = provider.getNavigator(FragmentNavigator::class.java)
+//        val fragmentNavigator = provider.getNavigator(FragmentNavigator::class.java)
+        val fragmentNavigator = MainFragmentNavigator(activity, activity.supportFragmentManager, containerId)
+        provider.addNavigator(fragmentNavigator)
         val activityNavigator = provider.getNavigator(ActivityNavigator::class.java)
 
         AppConfig.getDestConfig().values.forEach { node ->

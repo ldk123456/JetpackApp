@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         navView.setupWithNavController(navController)
 
-        NavGraphBuilder.build(navController)
+        NavGraphBuilder.build(navController, this, R.id.nav_host_fragment_activity_main)
         navView.setOnItemSelectedListener {
             navController.navigate(it.itemId)
             it.title.isNullOrEmpty().not()
