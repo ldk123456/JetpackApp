@@ -1,6 +1,7 @@
 {
   "activeColor": "#333333",
   "inActiveColor": "#666666",
+  "selectTab": 0,
   "tabs": [
     {
       "size": 24,
@@ -13,7 +14,7 @@
       "size": 24,
       "enable": true,
       "index": 1,
-      "pageUrl": "main/tabs/dash",
+      "pageUrl": "main/tabs/dashboard",
       "title": "沙发"
     },
     {
@@ -28,7 +29,7 @@
       "size": 24,
       "enable": true,
       "index": 3,
-      "pageUrl": "main/tabs/find",
+      "pageUrl": "main/tabs/notification",
       "title": "发现"
     },
     {

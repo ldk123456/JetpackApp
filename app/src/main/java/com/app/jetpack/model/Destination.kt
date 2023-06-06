@@ -7,4 +7,9 @@ data class Destination(
     var needLogin: Boolean = false,
     var asStarter: Boolean = false,
     var isFragment: Boolean = true
-)
+) {
+    // JSON 序列化需要
+    fun setIsFragment(isFragment: Boolean) {
+        this.isFragment = isFragment
+    }
+}

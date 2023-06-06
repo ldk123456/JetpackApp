@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph
 import androidx.navigation.NavGraphNavigator
 import androidx.navigation.fragment.FragmentNavigator
+import com.app.lib_common.app.AppGlobals
 
 object NavGraphBuilder {
     fun build(navController: NavController) {

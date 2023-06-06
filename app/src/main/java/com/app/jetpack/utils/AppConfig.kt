@@ -6,6 +6,7 @@ import com.app.jetpack.model.BottomBarModel
 import com.app.jetpack.model.Destination
 import com.app.lib_base.BOTTOM_BAR_CONFIG_FILE_NAME
 import com.app.lib_base.DESTINATION_OUTPUT_FILE_NAME
+import com.app.lib_common.app.AppGlobals
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

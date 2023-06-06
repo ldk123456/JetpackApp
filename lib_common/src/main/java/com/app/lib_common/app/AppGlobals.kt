@@ -1,4 +1,4 @@
-package com.app.jetpack.utils
+package com.app.lib_common.app
 
 import android.annotation.SuppressLint
 import android.content.Context
