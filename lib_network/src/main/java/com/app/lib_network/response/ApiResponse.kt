@@ -1,4 +1,4 @@
-package com.app.lib_network
+package com.app.lib_network.response
 
 data class ApiResponse<T>(
     var success: Boolean = false,

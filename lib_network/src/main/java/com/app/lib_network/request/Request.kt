@@ -1,23 +1,29 @@
 package com.app.lib_network.request
 
 import androidx.annotation.WorkerThread
-import com.app.lib_network.ApiResponse
+import androidx.arch.core.executor.ArchTaskExecutor
+import com.app.lib_common.app.AppGlobals
+import com.app.lib_network.response.ApiResponse
 import com.app.lib_network.ApiService
+import com.app.lib_network.cache.CacheManager
+import com.app.lib_network.core.CacheStrategy
 import com.app.lib_network.core.JsonCallback
+import com.app.lib_network.core.UrlCreator
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
+import java.io.Serializable
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
 @Suppress("UNCHECKED_CAST")
 abstract class Request<T, R : Request<T, R>>(
     protected var url: String = ""
-) {
+) : Cloneable {
     companion object {
         private const val TAG = "Request"
     }
@@ -28,6 +34,8 @@ abstract class Request<T, R : Request<T, R>>(
     private var mCacheKey: String = TAG
     private var mType: Type? = null
     private var mClass: Class<T>? = null
+    @CacheStrategy
+    private var mCacheStrategy: Int = CacheStrategy.NET_CACHE
 
     private val newCall: Call
         get() {
@@ -58,6 +66,11 @@ abstract class Request<T, R : Request<T, R>>(
         return this as R
     }
 
+    fun cacheStrategy(@CacheStrategy cacheStrategy: Int): R {
+        mCacheStrategy = cacheStrategy
+        return this as R
+    }
+
     fun cacheKey(key: String): R {
         mCacheKey = key
         return this as R
@@ -78,6 +91,18 @@ abstract class Request<T, R : Request<T, R>>(
     protected abstract fun generateRequest(builder: okhttp3.Request.Builder): okhttp3.Request
 
     fun execute(callback: JsonCallback<T>) {
+        if (mCacheStrategy != CacheStrategy.NET_ONLY) {
+            AppGlobals.applicationScope.launch {
+                withContext(Dispatchers.IO) {
+                    readCache()
+                }.let {
+                    callback.onCacheSuccess(it)
+                }
+            }
+        }
+        if (mCacheStrategy == CacheStrategy.CACHE_ONLY) {
+            return
+        }
         newCall.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 callback.onError(ApiResponse(message = e.message.orEmpty()))
@@ -96,6 +121,12 @@ abstract class Request<T, R : Request<T, R>>(
 
     @WorkerThread
     fun execute(): ApiResponse<T> {
+        if (mType == null && mClass == null) {
+            throw RuntimeException("同步方法,type|classType类型必须设置")
+        }
+        if (mCacheStrategy == CacheStrategy.CACHE_ONLY) {
+            return readCache()
+        }
         return runCatching {
             parseResponse(newCall.execute())
         }.getOrElse {
@@ -133,6 +164,23 @@ abstract class Request<T, R : Request<T, R>>(
             result.success = false
             result.status = 0
         }
+
+        if (mCacheStrategy != CacheStrategy.NET_ONLY && result.success && result.body is Serializable) {
+            saveCache(result.body)
+        }
+
         return result
+    }
+
+    private fun readCache(): ApiResponse<T> {
+        val key = mCacheKey.takeIf { it.isNotEmpty() } ?: UrlCreator.createUrlFromParams(url, params)
+        val cache = CacheManager.getCache<T>(key)
+        return ApiResponse(status = 304, message = "缓存获取成功", body = cache, success = true)
+    }
+
+    private fun saveCache(body: T?) {
+        body ?: return
+        val key = mCacheKey.takeIf { it.isNotEmpty() } ?: UrlCreator.createUrlFromParams(url, params)
+         CacheManager.save(key, body)
     }
 }
