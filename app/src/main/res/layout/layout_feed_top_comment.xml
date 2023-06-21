@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="comment"
+            type="com.app.jetpack.model.Comment" />
+
+        <import type="com.app.lib_common.ext.StringUtils" />
+
+        <import type="com.app.lib_common.ext.IntUtils" />
+
+        <import type="com.app.lib_common.ext.ViewUtils" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:background="@color/color_gray2"
+        android:paddingStart="@dimen/dp_10"
+        android:paddingEnd="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_60"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:src="@drawable/icon_god_comment2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.app.jetpack.view.BindingImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_10"
+            app:image_url="@{comment.author.avatar}"
+            app:is_circle="@{true}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@mipmap/ic_launcher_round" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_10"
+            android:text="@{comment.author.name}"
+            android:textColor="@color/color_3D3D3D"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+            app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+            app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+            tools:text="Jetpack App Name" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_4"
+            android:text="@{IntUtils.convertFeedUgc(comment.ugc.likeCount)}"
+            android:textColor="@{comment.ugc.hasLiked?@color/color_theme:@color/color_3D3D3D}"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+            app:layout_constraintEnd_toStartOf="@+id/iv_like"
+            app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+            tools:text="1000" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_2"
+            android:src="@{comment.ugc.hasLiked?@drawable/icon_cell_liked:@drawable/icon_cell_like}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+            tools:src="@drawable/icon_cell_liked" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_comment_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_36"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@{comment.commentText}"
+            android:textColor="@color/color_3D3D3D"
+            android:textSize="@dimen/sp_14"
+            android:visibility="@{StringUtils.getVisibility(comment.commentText)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_avatar"
+            tools:text="Jetpack App Comment" />
+
+        <com.app.jetpack.view.BindingImageView
+            android:id="@+id/iv_comment"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@color/color_theme_10"
+            app:image_url="@{comment.imageUrl}"
+            app:is_circle="@{false}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_comment_content"
+            tools:src="@mipmap/ic_launcher_round" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:src="@drawable/icon_video_play"
+            android:visibility="@{ViewUtils.getVisibility(comment.commentType==2)}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_comment"
+            app:layout_constraintEnd_toEndOf="@+id/iv_comment"
+            app:layout_constraintStart_toStartOf="@+id/iv_comment"
+            app:layout_constraintTop_toTopOf="@+id/iv_comment" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

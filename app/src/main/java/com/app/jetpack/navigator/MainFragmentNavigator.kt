@@ -11,6 +11,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.FragmentNavigator
+import java.util.ArrayDeque
 
 @Navigator.Name("main_fragment")
 class MainFragmentNavigator(
@@ -132,8 +133,7 @@ class MainFragmentNavigator(
             ft.hide(fragment)
         }
         var frag: Fragment?
-        val tag = destination.id.toString()
-        frag = fragmentManager.findFragmentByTag(tag)
+        frag = fragmentManager.findFragmentByTag(entry.id)
         if (frag != null) {
             ft.show(frag)
         } else {
@@ -144,7 +144,7 @@ class MainFragmentNavigator(
             }
             frag = fragmentManager.fragmentFactory.instantiate(context.classLoader, className)
             frag.arguments = args
-            ft.add(containerId, frag, tag)
+            ft.add(containerId, frag, entry.id)
         }
 //        ft.replace(containerId, frag)
         ft.setPrimaryNavigationFragment(frag)

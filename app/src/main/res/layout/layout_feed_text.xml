@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="feedText"
+            type="String" />
+
+        <import type="com.app.lib_common.ext.StringUtils" />
+    </data>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="@{feedText}"
+        android:textColor="@color/color_2F2F2F"
+        android:textSize="@dimen/sp_16"
+        android:visibility="@{StringUtils.getVisibility(feedText)}"
+        tools:text="Jetpack App Feed Text" />
+</layout>
