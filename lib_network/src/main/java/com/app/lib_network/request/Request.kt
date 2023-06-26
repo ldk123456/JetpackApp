@@ -35,7 +35,7 @@ abstract class Request<T, R : Request<T, R>>(
     private var mType: Type? = null
     private var mClass: Class<T>? = null
     @CacheStrategy
-    private var mCacheStrategy: Int = CacheStrategy.NET_CACHE
+    private var mCacheStrategy: Int = CacheStrategy.NET_ONLY
 
     private val newCall: Call
         get() {
@@ -51,14 +51,14 @@ abstract class Request<T, R : Request<T, R>>(
     }
 
     fun addParam(key: String, value: Any?): R {
-        value?.let {
+        value?.let { v ->
             runCatching {
-                if (it.javaClass == String::class.java) {
-                    params[key] = it
+                if (v.javaClass == String::class.java) {
+                    params[key] = v
                 } else {
-                    (it.javaClass.getField("TYPE").get(null) as? Class<*>)
+                    (v.javaClass.getField("TYPE").get(null) as? Class<*>)
                         ?.takeIf { it.isPrimitive }?.let {
-                            params[key] = it
+                            params[key] = v
                         }
                 }
             }
@@ -95,7 +95,9 @@ abstract class Request<T, R : Request<T, R>>(
             AppGlobals.applicationScope.launch {
                 withContext(Dispatchers.IO) {
                     readCache()
-                }.let {
+                }.takeIf {
+                    it.body != null
+                }?.let {
                     callback.onCacheSuccess(it)
                 }
             }
@@ -181,6 +183,10 @@ abstract class Request<T, R : Request<T, R>>(
     private fun saveCache(body: T?) {
         body ?: return
         val key = mCacheKey.takeIf { it.isNotEmpty() } ?: UrlCreator.createUrlFromParams(url, params)
-         CacheManager.save(key, body)
+        CacheManager.save(key, body)
+    }
+
+    public override fun clone(): R {
+        return super.clone() as R
     }
 }

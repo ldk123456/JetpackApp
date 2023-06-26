@@ -30,6 +30,7 @@
             app:icon="@{feed.ugc.hasLiked?@drawable/icon_cell_liked:@drawable/icon_cell_like}"
             app:iconGravity="textStart"
             app:iconPadding="4dp"
+            app:iconTint="@{feed.ugc.hasLiked?@color/color_theme:@color/color_3D3D3D}"
             tools:icon="@drawable/icon_cell_like"
             tools:text="1000"
             tools:textColor="@color/color_3D3D3D" />
@@ -46,6 +47,7 @@
             app:icon="@{feed.ugc.hasdiss?@drawable/icon_cell_dissed:@drawable/icon_cell_diss}"
             app:iconGravity="textStart"
             app:iconPadding="4dp"
+            app:iconTint="@{feed.ugc.hasdiss?@color/color_theme:@color/color_3D3D3D}"
             tools:icon="@drawable/icon_cell_diss"
             tools:text="1000"
             tools:textColor="@color/color_3D3D3D" />

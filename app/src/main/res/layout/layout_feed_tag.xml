@@ -13,21 +13,22 @@
     </data>
 
     <com.google.android.material.button.MaterialButton
-        style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/dp_25"
+        android:layout_height="@dimen/dp_20"
         android:layout_marginStart="@dimen/dp_16"
         android:layout_marginBottom="@dimen/dp_10"
+        android:gravity="center_vertical"
         android:stateListAnimator="@null"
         android:text="@{tagText}"
         android:textColor="@color/color_2F2F2F"
-        android:textSize="@dimen/sp_12"
+        android:textSize="@dimen/sp_10"
         android:visibility="@{StringUtils.getVisibility(tagText)}"
         app:backgroundTint="@color/color_gray"
-        app:cornerRadius="@dimen/dp_25"
+        app:cornerRadius="@dimen/dp_20"
         app:icon="@drawable/icon_tag"
         app:iconGravity="textStart"
         app:iconPadding="@dimen/dp_4"
         app:iconSize="@dimen/dp_12"
+        app:iconTintMode="multiply"
         tools:text="Jetpack App" />
 </layout>

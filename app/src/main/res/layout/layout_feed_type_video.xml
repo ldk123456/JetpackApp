@@ -24,10 +24,10 @@
             layout="@layout/layout_feed_text"
             app:feedText="@{feed.feeds_text}" />
 
-        <!-- 图片 区域-->
-        <com.app.jetpack.view.BindingImageView
-            android:id="@+id/iv_feed"
-            android:layout_width="match_parent"
+        <!--    视频 区域    -->
+        <com.app.jetpack.view.ListPlayerView
+            android:id="@+id/list_player_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_10" />
 

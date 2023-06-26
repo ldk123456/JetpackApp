@@ -1,44 +1,52 @@
 package com.app.jetpack.ui.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.paging.ItemKeyedDataSource
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.app.jetpack.core.KEY_FEED_TYPE
 import com.app.jetpack.core.PATH_MAIN_HOME
-import com.app.jetpack.databinding.FragmentHomeBinding
+import com.app.jetpack.model.Feed
+import com.app.jetpack.ui.base.BaseListFragment
+import com.app.jetpack.ui.base.MutableDataSource
 import com.app.lib_nav_annotation.annotation.FragmentDestination
+import com.scwang.smart.refresh.layout.api.RefreshLayout
+
 
 @FragmentDestination(PATH_MAIN_HOME, asStarter = true)
-class HomeFragment : Fragment() {
+class HomeFragment : BaseListFragment<Feed, HomeViewModel>() {
 
-    private var _binding: FragmentHomeBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+    private val mFeedType: String by lazy(LazyThreadSafetyMode.NONE) {
+        arguments?.getString(KEY_FEED_TYPE) ?: "all"
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mViewModel?.getCacheLiveData()?.observe(viewLifecycleOwner) {
+            submitList(it)
+        }
+    }
+
+    override fun getAdapter(): PagedListAdapter<Feed, out RecyclerView.ViewHolder> {
+        return FeedAdapter(requireContext(), mFeedType)
+    }
+
+    override fun onRefresh(refreshLayout: RefreshLayout) {
+        mViewModel?.getDataSource()?.invalidate()
+    }
+
+    override fun onLoadMore(refreshLayout: RefreshLayout) {
+        val feed = mAdapter.currentList?.last() ?: return
+        mViewModel?.loadAfter(feed.id, object : ItemKeyedDataSource.LoadCallback<Feed>() {
+            override fun onResult(data: List<Feed>) {
+                val config = mAdapter.currentList?.config
+                if (config != null && data.isNotEmpty()) {
+                    val dataSource = MutableDataSource<Int, Feed>()
+                    dataSource.data.addAll(data)
+                    submitList(dataSource.buildNewPagedList(config))
+                }
+            }
+        })
     }
 }

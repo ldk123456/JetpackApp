@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.app.lib_network.core.Convert
 import com.app.lib_network.core.JsonConvert
+import com.app.lib_network.request.GetRequest
+import com.app.lib_network.request.PostRequest
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.security.SecureRandom
@@ -58,5 +60,13 @@ object ApiService {
     fun init(baseUrl: String, convert: Convert<Any>? = null) {
         mBaseUrl = baseUrl
         this.convert = convert ?: JsonConvert()
+    }
+
+    fun <T> get(url: String): GetRequest<T> {
+        return GetRequest(mBaseUrl + url)
+    }
+
+    fun <T> post(url: String): PostRequest<T> {
+        return PostRequest(mBaseUrl + url)
     }
 }

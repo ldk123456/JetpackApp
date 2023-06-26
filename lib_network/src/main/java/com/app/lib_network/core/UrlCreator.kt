@@ -1,6 +1,6 @@
 package com.app.lib_network.core
 
-import okio.ByteString.Companion.encodeUtf8
+import java.net.URLEncoder
 
 object UrlCreator {
     fun createUrlFromParams(url: String, params: Map<String, Any?>): String {
@@ -13,7 +13,7 @@ object UrlCreator {
             }
             params.forEach { (k, v) ->
                 append(k).append("=")
-                    .append(v.toString().encodeUtf8().toString())
+                    .append(URLEncoder.encode(v.toString(), "UTF-8"))
                     .append("&")
             }
             deleteCharAt(lastIndex)

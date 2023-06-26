@@ -7,6 +7,7 @@ import com.app.lib_network.core.CacheStrategy.Companion.NET_ONLY
 import com.app.lib_network.core.CacheStrategy.Companion.NET_CACHE
 
 @IntDef(CACHE_ONLY, CACHE_FIRST, NET_ONLY, NET_CACHE)
+@Retention(AnnotationRetention.SOURCE)
 annotation class CacheStrategy {
     companion object {
         //仅仅只访问本地缓存，即便本地缓存不存在，也不会发起网络请求
