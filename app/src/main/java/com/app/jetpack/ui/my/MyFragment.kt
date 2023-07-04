@@ -11,7 +11,7 @@ import com.app.jetpack.core.PATH_MAIN_MY
 import com.app.jetpack.databinding.FragmentMyBinding
 import com.app.lib_nav_annotation.annotation.FragmentDestination
 
-@FragmentDestination(PATH_MAIN_MY)
+@FragmentDestination(PATH_MAIN_MY, needLogin = true)
 class MyFragment : Fragment() {
 
     private var _binding: FragmentMyBinding? = null

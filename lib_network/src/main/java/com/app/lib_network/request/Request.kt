@@ -17,8 +17,8 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 import java.io.Serializable
-import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import kotlin.reflect.javaType
 
 @Suppress("UNCHECKED_CAST")
 abstract class Request<T, R : Request<T, R>>(
@@ -31,7 +31,7 @@ abstract class Request<T, R : Request<T, R>>(
     private val headers = HashMap<String, String>()
     protected val params = HashMap<String, Any>()
 
-    private var mCacheKey: String = TAG
+    private var mCacheKey: String = ""
     private var mType: Type? = null
     private var mClass: Class<T>? = null
     @CacheStrategy
@@ -140,16 +140,16 @@ abstract class Request<T, R : Request<T, R>>(
         execute()
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     private fun parseResponse(response: Response, callback: JsonCallback<T>? = null): ApiResponse<T> {
         val result = ApiResponse<T>(status = response.code, success = response.isSuccessful)
         runCatching {
             val content = response.body?.string().orEmpty()
             if (response.isSuccessful) {
                 if (callback != null) {
-                    (callback.javaClass.genericSuperclass as? ParameterizedType)?.actualTypeArguments?.firstOrNull()
-                        ?.let {
-                            result.body = ApiService.convert.convert(content, it) as? T
-                        }
+                    callback.javaClass.kotlin.supertypes.firstOrNull()?.arguments?.firstOrNull()?.type?.javaType?.let {
+                        result.body = ApiService.convert.convert(content, it) as? T
+                    }
                 } else if (mType != null) {
                     result.body = ApiService.convert.convert(content, mType!!) as? T
                 } else if (mClass != null) {

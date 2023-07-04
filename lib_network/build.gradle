@@ -53,4 +53,5 @@ dependencies {
     kapt "androidx.room:room-compiler:2.5.0"
 
     implementation project(':lib_common')
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.9.0-Beta"
 }

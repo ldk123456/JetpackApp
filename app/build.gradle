@@ -5,6 +5,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        jetpack {
+            storePassword '123456'
+            keyAlias = 'pipijoke'
+            keyPassword '123456'
+            storeFile file('../key')
+        }
+    }
     namespace 'com.app.jetpack'
     compileSdk 33
 
@@ -22,6 +30,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.jetpack
         }
     }
     compileOptions {
@@ -40,6 +49,8 @@ android {
 }
 
 dependencies {
+    implementation fileTree(includes: ['*.jar'], dir: 'libs')
+    implementation files('libs/open_sdk_r6140_lite.jar')
     implementation project(':lib_common')
     implementation project(':lib_nav_annotation')
     implementation project(':lib_network')
