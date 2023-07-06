@@ -9,7 +9,15 @@
             name="feed"
             type="com.app.jetpack.model.Feed" />
 
+        <variable
+            name="lifecycleOwner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
         <import type="com.app.lib_common.ext.IntUtils" />
+
+        <import type="com.app.jetpack.ui.home.InteractionHelper" />
+
+        <import type="android.content.Context" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -23,10 +31,12 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="@{()->InteractionHelper.toggleFeedLike(lifecycleOwner,feed)}"
             android:text="@{IntUtils.convertFeedUgc(feed.ugc.likeCount)}"
             android:textColor="@{feed.ugc.hasLiked?@color/color_theme:@color/color_3D3D3D}"
             android:textSize="@dimen/sp_14"
             app:backgroundTint="@color/color_white"
+            app:cornerRadius="@dimen/dp_0"
             app:icon="@{feed.ugc.hasLiked?@drawable/icon_cell_liked:@drawable/icon_cell_like}"
             app:iconGravity="textStart"
             app:iconPadding="4dp"
@@ -40,10 +50,12 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="@{()->InteractionHelper.toggleFeedDiss(lifecycleOwner,feed)}"
             android:text="踩"
             android:textColor="@{feed.ugc.hasdiss?@color/color_theme:@color/color_3D3D3D}"
             android:textSize="@dimen/sp_14"
             app:backgroundTint="@color/color_white"
+            app:cornerRadius="@dimen/dp_0"
             app:icon="@{feed.ugc.hasdiss?@drawable/icon_cell_dissed:@drawable/icon_cell_diss}"
             app:iconGravity="textStart"
             app:iconPadding="4dp"
@@ -61,6 +73,7 @@
             android:textColor="@color/color_3D3D3D"
             android:textSize="@dimen/sp_14"
             app:backgroundTint="@color/color_white"
+            app:cornerRadius="@dimen/dp_0"
             app:icon="@drawable/icon_cell_comment"
             app:iconGravity="textStart"
             app:iconPadding="4dp"
@@ -72,10 +85,12 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="@{()->InteractionHelper.openShare((Context)lifecycleOwner,feed)}"
             android:text="@{IntUtils.convertFeedUgc(feed.ugc.shareCount)}"
             android:textColor="@color/color_3D3D3D"
             android:textSize="@dimen/sp_14"
             app:backgroundTint="@color/color_white"
+            app:cornerRadius="@dimen/dp_0"
             app:icon="@drawable/icon_cell_share"
             app:iconGravity="textStart"
             app:iconPadding="4dp"

@@ -1,5 +1,7 @@
 package com.app.jetpack.model
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import java.io.Serializable
 
 data class Feed(
@@ -18,10 +20,18 @@ data class Feed(
     var cover: String? = "",
     var author: User? = null,
     var topComment: Comment? = null,
-    var ugc: Ugc? = null
-) : Serializable {
+) : Serializable, BaseObservable() {
     companion object {
         const val TYPE_IMAGE = 1
         const val TYPE_VIDEO = 2
     }
+
+    @get:Bindable
+    var ugc: Ugc? = null
+        get() {
+            if (field == null) {
+                field = Ugc()
+            }
+            return field!!
+        }
 }

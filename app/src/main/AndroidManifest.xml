@@ -7,6 +7,75 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <queries>
+        <!--分享-->
+        <package android:name="com.android.mms"/>
+        <package android:name="com.android.email"/>
+        <package android:name="com.facebook.katana"/>
+        <package android:name="com.google.android.gm"/>
+        <package android:name="com.google.android.apps.inbox"/>
+        <package android:name="com.microsoft.office.outlook"/>
+        <package android:name="com.twitter.android"/>
+        <package android:name="com.tencent.mm"/>
+        <package android:name="com.tencent.mobileqq"/>
+        <package android:name="com.sina.weibo"/>
+        <package android:name="com.vivo.email"/>
+        <package android:name="com.netease.mail"/>
+        <package android:name="com.netease.mobimail"/>
+        <package android:name="com.tencent.androidqqmail"/>
+
+        <!--适配改包名的cs-->
+        <package android:name="com.intsig.camscanner"/>
+        <package android:name="com.intsig.camscanner_cn"/>
+        <package android:name="com.intsig.camscanner.huawei"/>
+
+        <intent>
+            <action android:name="android.intent.action.SENDTO"/>
+            <data android:mimeType="*/*"/>
+        </intent>
+
+        <intent>
+            <action android:name="android.intent.action.DIAL"/>
+            <data android:mimeType="*/*"/>
+        </intent>
+
+        <intent>
+            <action android:name="android.intent.action.SEND"/>
+            <data android:mimeType="*/*"/>
+        </intent>
+
+        <intent>
+            <action android:name="android.intent.action.SEND_MULTIPLE"/>
+            <data android:mimeType="*/*"/>
+        </intent>
+
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:mimeType="*/*"/>
+        </intent>
+
+        <intent>
+            <action android:name="android.intent.action.OPEN_DOCUMENT"/>
+            <data android:mimeType="*/*"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.OPEN_DOCUMENT_TREE"/>
+            <data android:mimeType="*/*"/>
+        </intent>
+
+        <intent>
+            <action android:name="android.intent.action.GET_CONTENT"/>
+            <data android:mimeType="*/*"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.PICK"/>
+            <data android:mimeType="*/*"/>
+        </intent>
+
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE"/>
+        </intent>
+    </queries>
 
     <application
         android:name=".MainApplication"

@@ -28,7 +28,10 @@ object UserManager {
     }
 
     fun login(context: Context): LiveData<User> {
-        context.startActivity(Intent(context, LoginActivity::class.java))
+        val intent = Intent(context, LoginActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
         return mUserLiveData
     }
 

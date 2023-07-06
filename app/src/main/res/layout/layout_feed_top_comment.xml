@@ -9,11 +9,17 @@
             name="comment"
             type="com.app.jetpack.model.Comment" />
 
+        <variable
+            name="lifecycleOwner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
         <import type="com.app.lib_common.ext.StringUtils" />
 
         <import type="com.app.lib_common.ext.IntUtils" />
 
         <import type="com.app.lib_common.ext.ViewUtils" />
+
+        <import type="com.app.jetpack.ui.home.InteractionHelper" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +31,7 @@
         android:paddingStart="@dimen/dp_10"
         android:paddingEnd="@dimen/dp_10"
         android:paddingBottom="@dimen/dp_10"
-        android:visibility="@{ViewUtils.getVisibility(comment == null)}">
+        android:visibility="@{ViewUtils.getVisibility(comment != null)}">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
@@ -77,6 +83,7 @@
             android:id="@+id/iv_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="@{()->InteractionHelper.toggleCommentLike(lifecycleOwner,comment)}"
             android:src="@{comment.ugc.hasLiked?@drawable/icon_cell_liked:@drawable/icon_cell_like}"
             app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
             app:layout_constraintEnd_toEndOf="parent"

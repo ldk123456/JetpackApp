@@ -10,6 +10,7 @@ import com.alibaba.fastjson2.TypeReference
 import com.app.jetpack.model.Feed
 import com.app.jetpack.ui.base.BasePagedViewModel
 import com.app.jetpack.ui.base.MutableDataSource
+import com.app.jetpack.ui.login.UserManager
 import com.app.lib_network.ApiService
 import com.app.lib_network.core.CacheStrategy
 import com.app.lib_network.core.JsonCallback
@@ -55,7 +56,7 @@ class HomeViewModel : BasePagedViewModel<Feed>() {
         }
         val request = ApiService.get<ArrayList<Feed>>("/feeds/queryHotFeedsList")
             .addParam("feedType", "")
-            .addParam("userId", 0)
+            .addParam("userId", UserManager.getUserId())
             .addParam("feedId", key)
             .addParam("pageCount", 10)
             .responseType(object : TypeReference<ArrayList<Feed>>() {}.type)

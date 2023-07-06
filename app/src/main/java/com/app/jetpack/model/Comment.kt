@@ -18,5 +18,12 @@ data class Comment(
     var height: Int = 0,
     var hasLiked: Boolean = false,
     var author: User? = null,
+) : Serializable {
     var ugc: Ugc? = null
-) : Serializable
+        get() {
+            if (field == null) {
+                field = Ugc()
+            }
+            return field!!
+        }
+}

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -51,9 +52,11 @@ class FeedAdapter(
             if (binding is LayoutFeedTypeImageBinding) {
                 binding.feed = feed
                 binding.ivFeed.bindData(feed.cover, feed.width, feed.height, 16)
+                binding.interactionLayout.lifecycleOwner = context as? LifecycleOwner
             } else if (binding is LayoutFeedTypeVideoBinding) {
                 binding.feed = feed
                 binding.listPlayerView.bindData(category, feed.cover, feed.url, feed.width, feed.height)
+                binding.interactionLayout.lifecycleOwner = context as? LifecycleOwner
             }
         }
     }
