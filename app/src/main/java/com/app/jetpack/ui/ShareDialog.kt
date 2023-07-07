@@ -78,15 +78,18 @@ class ShareDialog(context: Context) : AlertDialog(context) {
     }
 
     private fun queryShareItems() {
-        val intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            type = "text/plain"
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "text/plain"
+                }
+                context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_ALL).forEach {
+                    mShareItems.add(it)
+                }
+            }
+            mAdapter.notifyDataSetChanged()
         }
-
-        context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_ALL).forEach {
-            mShareItems.add(it)
-        }
-        mAdapter.notifyDataSetChanged()
     }
 
     fun setShareContent(shareContent: String): ShareDialog {
