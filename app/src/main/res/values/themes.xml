@@ -15,6 +15,10 @@
         <item name="materialButtonStyle">@style/JetpackApp_MaterialButton</item>
     </style>
 
+    <style name="Splash_Theme" parent="Theme.JetpackApp">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
     <style name="JetpackApp_MaterialButton" parent="Widget.MaterialComponents.Button">
         <item name="android:paddingStart">8dp</item>
         <item name="android:paddingEnd">8dp</item>

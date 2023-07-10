@@ -87,7 +87,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.JetpackApp"
+        android:theme="@style/Splash_Theme"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
