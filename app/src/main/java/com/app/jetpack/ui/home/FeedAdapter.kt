@@ -11,8 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.jetpack.databinding.LayoutFeedTypeImageBinding
 import com.app.jetpack.databinding.LayoutFeedTypeVideoBinding
 import com.app.jetpack.model.Feed
+import com.app.jetpack.view.ListPlayerView
 
-class FeedAdapter(
+open class FeedAdapter(
     private val context: Context,
     private val category: String
 ) : PagedListAdapter<Feed, FeedAdapter.ViewHolder>(
@@ -47,6 +48,9 @@ class FeedAdapter(
     }
 
     inner class ViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
+        var listPlayerView: ListPlayerView? = null
+            private set
+
         fun bindData(feed: Feed?) {
             feed ?: return
             if (binding is LayoutFeedTypeImageBinding) {
@@ -57,7 +61,10 @@ class FeedAdapter(
                 binding.feed = feed
                 binding.listPlayerView.bindData(category, feed.cover, feed.url, feed.width, feed.height)
                 binding.interactionLayout.lifecycleOwner = context as? LifecycleOwner
+                listPlayerView = binding.listPlayerView
             }
         }
+
+        fun isVideoItem() = binding is LayoutFeedTypeVideoBinding
     }
 }

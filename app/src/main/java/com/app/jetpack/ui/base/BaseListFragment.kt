@@ -58,6 +58,8 @@ abstract class BaseListFragment<T : Any, M : BasePagedViewModel<T>>
 
     abstract fun getAdapter(): PagedListAdapter<T, out RecyclerView.ViewHolder>
 
+    protected fun getRecyclerView() = binding.recyclerView
+
     private fun genericViewModel() {
         javaClass.genericSuperclass.safeAs<ParameterizedType>()?.actualTypeArguments
             ?.getOrNull(1)?.safeAs<Class<*>>()?.asSubclass(BasePagedViewModel::class.java)

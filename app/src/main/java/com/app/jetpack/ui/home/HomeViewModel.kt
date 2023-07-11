@@ -25,6 +25,12 @@ class HomeViewModel : BasePagedViewModel<Feed>() {
     private val mCacheLiveData = MutableLiveData<PagedList<Feed>>()
     private val mLoadAfter = AtomicBoolean(false)
 
+    private var mFeedType: String = ""
+
+    fun setFeedType(feedType: String) {
+        this.mFeedType = feedType
+    }
+
     fun getCacheLiveData() = mCacheLiveData
 
     override fun createDataSource(): DataSource<out Any, Feed> {
@@ -55,7 +61,7 @@ class HomeViewModel : BasePagedViewModel<Feed>() {
             mLoadAfter.set(true)
         }
         val request = ApiService.get<ArrayList<Feed>>("/feeds/queryHotFeedsList")
-            .addParam("feedType", "")
+            .addParam("feedType", mFeedType)
             .addParam("userId", UserManager.getUserId())
             .addParam("feedId", key)
             .addParam("pageCount", 10)
