@@ -16,7 +16,7 @@ class PageListPlayerDetector(
     private val mDataObserver = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
             super.onItemRangeInserted(positionStart, itemCount)
-            autoPlay()
+            postAutoPlay()
         }
     }
 
@@ -34,7 +34,7 @@ class PageListPlayerDetector(
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (RecyclerView.SCROLL_STATE_IDLE == newState) {
-                    autoPlay()
+                    postAutoPlay()
                 }
             }
 
@@ -51,6 +51,10 @@ class PageListPlayerDetector(
                 }
             }
         })
+    }
+
+    private fun postAutoPlay() {
+        recyclerView.post { autoPlay() }
     }
 
     private fun autoPlay() {

@@ -76,6 +76,15 @@ class HomeFragment : BaseListFragment<Feed, HomeViewModel>() {
         })
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            mPlayerDetector.onPause()
+        } else {
+            mPlayerDetector.onResume()
+        }
+    }
+
     override fun onPause() {
         super.onPause()
         mPlayerDetector.onPause()
@@ -83,7 +92,13 @@ class HomeFragment : BaseListFragment<Feed, HomeViewModel>() {
 
     override fun onResume() {
         super.onResume()
-        mPlayerDetector.onResume()
+        parentFragment?.let {
+            if (it.isVisible && isVisible) {
+                mPlayerDetector.onResume()
+            }
+        } ?: run {
+            mPlayerDetector.onResume()
+        }
     }
 
     override fun onDestroy() {

@@ -106,6 +106,9 @@ class ListPlayerView @JvmOverloads constructor(
 
     override fun onActive() {
         val player = PageListPlayerManager.get(mCategory)
+        if (player.playerView == null) {
+            return
+        }
         player.playerView?.parent.let {
             if (it != this) {
                 it.safeAs<ViewGroup>()?.removeView(player.playerView)
@@ -132,7 +135,6 @@ class ListPlayerView @JvmOverloads constructor(
         player.playerControlView?.addVisibilityListener(this)
         player.exoPlayer?.addListener(this)
         player.playerControlView?.show()
-        binding.pbBuffer.isVisible = true
         player.exoPlayer?.playWhenReady = true
     }
 
