@@ -1,4 +1,4 @@
-package com.app.jetpack.ui.notifications
+package com.app.jetpack.ui.find
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

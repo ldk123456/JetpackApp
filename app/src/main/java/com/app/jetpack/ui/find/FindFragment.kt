@@ -1,4 +1,4 @@
-package com.app.jetpack.ui.notifications
+package com.app.jetpack.ui.find
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.app.jetpack.core.PATH_MAIN_NOTIFICATION
-import com.app.jetpack.databinding.FragmentNotificationsBinding
+import com.app.jetpack.core.PATH_MAIN_FIND
+import com.app.jetpack.databinding.FragmentFindBinding
 import com.app.lib_nav_annotation.annotation.FragmentDestination
 
-@FragmentDestination(PATH_MAIN_NOTIFICATION)
-class NotificationsFragment : Fragment() {
+@FragmentDestination(PATH_MAIN_FIND)
+class FindFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
+    private var _binding: FragmentFindBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -27,7 +27,7 @@ class NotificationsFragment : Fragment() {
         val notificationsViewModel =
             ViewModelProvider(this).get(NotificationsViewModel::class.java)
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentFindBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textNotifications
