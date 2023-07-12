@@ -97,7 +97,10 @@ class HomeFragment : BaseListFragment<Feed, HomeViewModel>() {
                 mPlayerDetector.onResume()
             }
         } ?: run {
-            mPlayerDetector.onResume()
+            if (isVisible) {
+                mPlayerDetector.onResume()
+                binding.root.requestFitSystemWindows()
+            }
         }
     }
 

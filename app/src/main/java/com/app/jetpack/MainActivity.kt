@@ -2,20 +2,19 @@ package com.app.jetpack
 
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.app.jetpack.databinding.ActivityMainBinding
 import com.app.jetpack.ui.login.UserManager
 import com.app.jetpack.utils.AppConfig
 import com.app.jetpack.utils.NavGraphBuilder
+import com.app.lib_common.base.BaseActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Theme_JetpackApp)
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)

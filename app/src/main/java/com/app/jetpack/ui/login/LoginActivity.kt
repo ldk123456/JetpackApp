@@ -1,13 +1,13 @@
 package com.app.jetpack.ui.login
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.app.jetpack.databinding.ActivityLayoutLoginBinding
 import com.app.jetpack.model.User
+import com.app.lib_common.base.BaseActivity
 import com.app.lib_common.ext.safeAs
 import com.app.lib_network.ApiService
 import com.app.lib_network.core.JsonCallback
@@ -22,7 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-class LoginActivity : AppCompatActivity(), View.OnClickListener {
+class LoginActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityLayoutLoginBinding
 

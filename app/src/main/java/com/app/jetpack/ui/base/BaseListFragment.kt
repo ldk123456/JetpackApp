@@ -22,7 +22,7 @@ import java.lang.reflect.ParameterizedType
 abstract class BaseListFragment<T : Any, M : BasePagedViewModel<T>>
     : Fragment(), OnRefreshLoadMoreListener {
 
-    private lateinit var binding: LayoutRefreshViewBinding
+    protected lateinit var binding: LayoutRefreshViewBinding
 
     protected lateinit var mAdapter: PagedListAdapter<T, out RecyclerView.ViewHolder>
     protected var mViewModel: M? = null
