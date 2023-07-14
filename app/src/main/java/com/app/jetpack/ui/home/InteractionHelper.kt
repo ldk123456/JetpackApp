@@ -106,4 +106,36 @@ object InteractionHelper {
                     })
             }.show()
     }
+
+    @JvmStatic
+    fun toggleFeedFavorite(owner: LifecycleOwner, feed: Feed) {
+        doAfterLogin(owner) {
+            ApiService.get<JSONObject>("/ugc/toggleFavorite")
+                .addParam("itemId", feed.itemId)
+                .addParam("userId", UserManager.getUserId())
+                .execute(object : JsonCallback<JSONObject> {
+                    override fun onSuccess(response: ApiResponse<JSONObject>) {
+                        response.body?.let {
+                            feed.ugc?.hasFavorite = it.getBoolean("hasFavorite") ?: false
+                        }
+                    }
+                })
+        }
+    }
+
+    @JvmStatic
+    fun toggleFollowUser(owner: LifecycleOwner, user: User) {
+        doAfterLogin(owner) {
+            ApiService.get<JSONObject>("/ugc/toggleUserFollow")
+                .addParam("followUserId", UserManager.getUserId())
+                .addParam("userId", user.userId)
+                .execute(object : JsonCallback<JSONObject> {
+                    override fun onSuccess(response: ApiResponse<JSONObject>) {
+                        response.body?.let {
+                            user.hasFollow = it.getBoolean("hasLiked") ?: false
+                        }
+                    }
+                })
+        }
+    }
 }

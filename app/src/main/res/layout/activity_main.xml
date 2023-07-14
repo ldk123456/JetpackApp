@@ -16,8 +16,7 @@
         app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="FragmentTagUsage" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.app.jetpack.view.AppBottomBar
         android:id="@+id/nav_view"

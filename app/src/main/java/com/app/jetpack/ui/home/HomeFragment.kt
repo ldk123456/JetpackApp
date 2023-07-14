@@ -11,7 +11,7 @@ import com.app.jetpack.model.Feed
 import com.app.jetpack.player.PageListPlayerDetector
 import com.app.jetpack.player.PageListPlayerManager
 import com.app.jetpack.ui.base.BaseListFragment
-import com.app.jetpack.ui.base.MutableDataSource
+import com.app.jetpack.ui.base.MutablePageKeyedDataSource
 import com.app.lib_common.ext.withBundle
 import com.app.lib_nav_annotation.annotation.FragmentDestination
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -68,7 +68,10 @@ class HomeFragment : BaseListFragment<Feed, HomeViewModel>() {
             override fun onResult(data: List<Feed>) {
                 val config = mAdapter.currentList?.config
                 if (config != null && data.isNotEmpty()) {
-                    val dataSource = MutableDataSource<Int, Feed>()
+                    val dataSource = MutablePageKeyedDataSource<Feed>()
+                    mAdapter.currentList?.let {
+                        dataSource.data.addAll(it)
+                    }
                     dataSource.data.addAll(data)
                     submitList(dataSource.buildNewPagedList(config))
                 }

@@ -7,73 +7,77 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <queries>
-        <!--分享-->
-        <package android:name="com.android.mms"/>
-        <package android:name="com.android.email"/>
-        <package android:name="com.facebook.katana"/>
-        <package android:name="com.google.android.gm"/>
-        <package android:name="com.google.android.apps.inbox"/>
-        <package android:name="com.microsoft.office.outlook"/>
-        <package android:name="com.twitter.android"/>
-        <package android:name="com.tencent.mm"/>
-        <package android:name="com.tencent.mobileqq"/>
-        <package android:name="com.sina.weibo"/>
-        <package android:name="com.vivo.email"/>
-        <package android:name="com.netease.mail"/>
-        <package android:name="com.netease.mobimail"/>
-        <package android:name="com.tencent.androidqqmail"/>
 
-        <!--适配改包名的cs-->
-        <package android:name="com.intsig.camscanner"/>
-        <package android:name="com.intsig.camscanner_cn"/>
-        <package android:name="com.intsig.camscanner.huawei"/>
+        <!-- 分享 -->
+        <package android:name="com.android.mms" />
+        <package android:name="com.android.email" />
+        <package android:name="com.facebook.katana" />
+        <package android:name="com.google.android.gm" />
+        <package android:name="com.google.android.apps.inbox" />
+        <package android:name="com.microsoft.office.outlook" />
+        <package android:name="com.twitter.android" />
+        <package android:name="com.tencent.mm" />
+        <package android:name="com.tencent.mobileqq" />
+        <package android:name="com.sina.weibo" />
+        <package android:name="com.vivo.email" />
+        <package android:name="com.netease.mail" />
+        <package android:name="com.netease.mobimail" />
+        <package android:name="com.tencent.androidqqmail" />
 
-        <intent>
-            <action android:name="android.intent.action.SENDTO"/>
-            <data android:mimeType="*/*"/>
-        </intent>
+        <!-- 适配改包名的cs -->
+        <package android:name="com.intsig.camscanner" />
+        <package android:name="com.intsig.camscanner_cn" />
+        <package android:name="com.intsig.camscanner.huawei" />
 
         <intent>
-            <action android:name="android.intent.action.DIAL"/>
-            <data android:mimeType="*/*"/>
-        </intent>
+            <action android:name="android.intent.action.SENDTO" />
 
-        <intent>
-            <action android:name="android.intent.action.SEND"/>
-            <data android:mimeType="*/*"/>
+            <data android:mimeType="*/*" />
         </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
 
-        <intent>
-            <action android:name="android.intent.action.SEND_MULTIPLE"/>
-            <data android:mimeType="*/*"/>
+            <data android:mimeType="*/*" />
         </intent>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
 
-        <intent>
-            <action android:name="android.intent.action.VIEW"/>
-            <data android:mimeType="*/*"/>
+            <data android:mimeType="*/*" />
         </intent>
+        <intent>
+            <action android:name="android.intent.action.SEND_MULTIPLE" />
 
-        <intent>
-            <action android:name="android.intent.action.OPEN_DOCUMENT"/>
-            <data android:mimeType="*/*"/>
+            <data android:mimeType="*/*" />
         </intent>
         <intent>
-            <action android:name="android.intent.action.OPEN_DOCUMENT_TREE"/>
-            <data android:mimeType="*/*"/>
-        </intent>
+            <action android:name="android.intent.action.VIEW" />
 
-        <intent>
-            <action android:name="android.intent.action.GET_CONTENT"/>
-            <data android:mimeType="*/*"/>
+            <data android:mimeType="*/*" />
         </intent>
         <intent>
-            <action android:name="android.intent.action.PICK"/>
-            <data android:mimeType="*/*"/>
-        </intent>
+            <action android:name="android.intent.action.OPEN_DOCUMENT" />
 
+            <data android:mimeType="*/*" />
+        </intent>
         <intent>
-            <action android:name="android.media.action.IMAGE_CAPTURE"/>
+            <action android:name="android.intent.action.OPEN_DOCUMENT_TREE" />
+
+            <data android:mimeType="*/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.GET_CONTENT" />
+
+            <data android:mimeType="*/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.PICK" />
+
+            <data android:mimeType="*/*" />
+        </intent>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
     </queries>
 
@@ -87,13 +91,16 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Splash_Theme"
+        android:theme="@style/Theme.JetpackApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.detail.FeedDetailActivity"
+            android:exported="false"
+            android:theme="@style/FeedDetail_Theme" />
+        <activity
             android:name=".ui.login.LoginActivity"
-            android:exported="false" />
-        <!-- 这是是QQ快捷登录SDK 里面包含但没用的 apache的类，需要在这里通过uses-library去除掉 -->
+            android:exported="false" /> <!-- 这是是QQ快捷登录SDK 里面包含但没用的 apache的类，需要在这里通过uses-library去除掉 -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -103,7 +110,8 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Splash_Theme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

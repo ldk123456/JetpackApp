@@ -114,7 +114,6 @@ class SofaFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mMediator.detach()
         mBinding.viewPager.unregisterOnPageChangeCallback(mOnPageChangeCallback)
     }
 }

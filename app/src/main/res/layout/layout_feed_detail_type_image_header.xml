@@ -7,43 +7,47 @@
         <variable
             name="feed"
             type="com.app.jetpack.model.Feed" />
+
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
+        <import type="com.app.lib_common.ext.IntUtils" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_white"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/dp_10">
+        android:orientation="vertical">
 
         <include
-            layout="@layout/layout_feed_author"
-            app:user="@{feed.author}" />
+            layout="@layout/layout_feed_detail_author_info"
+            app:feed="@{feed}"
+            app:fullScreen="@{false}"
+            app:leftMargin="@{IntUtils.getDp(16)}"
+            app:owner="@{owner}" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_10" />
 
         <include
             layout="@layout/layout_feed_text"
             app:feedText="@{feed.feeds_text}"
-            app:lines="@{3}" />
+            app:lines="@{1000}" />
 
-        <!-- 图片 区域-->
         <com.app.jetpack.view.BindingImageView
-            android:id="@+id/iv_feed"
+            android:id="@+id/header_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_10" />
 
-        <include
-            layout="@layout/layout_feed_tag"
-            app:tagText="@{feed.activityText}" />
-
-        <include
-            layout="@layout/layout_feed_top_comment"
-            app:comment="@{feed.topComment}" />
-
-        <include
-            android:id="@+id/interaction_layout"
-            layout="@layout/layout_feed_interaction"
-            app:feed="@{feed}" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            android:backgroundTint="@color/color_divider" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

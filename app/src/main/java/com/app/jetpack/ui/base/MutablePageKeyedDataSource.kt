@@ -5,7 +5,7 @@ import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
 
-class MutableDataSource<K : Any, V : Any> : PageKeyedDataSource<K, V>() {
+class MutablePageKeyedDataSource<V : Any> : PageKeyedDataSource<Int, V>() {
     val data = ArrayList<V>()
 
     @SuppressLint("RestrictedApi")
@@ -16,15 +16,15 @@ class MutableDataSource<K : Any, V : Any> : PageKeyedDataSource<K, V>() {
             .build()
     }
 
-    override fun loadAfter(params: LoadParams<K>, callback: LoadCallback<K, V>) {
+    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, V>) {
         callback.onResult(listOf(), null)
     }
 
-    override fun loadBefore(params: LoadParams<K>, callback: LoadCallback<K, V>) {
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, V>) {
         callback.onResult(listOf(), null)
     }
 
-    override fun loadInitial(params: LoadInitialParams<K>, callback: LoadInitialCallback<K, V>) {
+    override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, V>) {
         callback.onResult(data, null, null)
     }
 }

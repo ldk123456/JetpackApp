@@ -8,7 +8,6 @@ import java.io.Serializable
 data class Ugc(
     var likeCount: Int = 0,
     var commentCount: Int = 0,
-    var hasFavorite: Boolean = false,
 ) : Serializable, BaseObservable() {
     @get:Bindable
     var shareCount: Int = 0
@@ -42,6 +41,13 @@ data class Ugc(
             } else {
                 likeCount -= 1
             }
+            field = value
+            notifyPropertyChanged(BR._all)
+        }
+
+    @get:Bindable
+    var hasFavorite: Boolean = false
+        set(value) {
             field = value
             notifyPropertyChanged(BR._all)
         }

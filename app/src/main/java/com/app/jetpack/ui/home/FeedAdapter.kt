@@ -1,6 +1,7 @@
 package com.app.jetpack.ui.home
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
@@ -8,9 +9,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.app.jetpack.core.KEY_FEED
 import com.app.jetpack.databinding.LayoutFeedTypeImageBinding
 import com.app.jetpack.databinding.LayoutFeedTypeVideoBinding
 import com.app.jetpack.model.Feed
+import com.app.jetpack.ui.detail.FeedDetailActivity
 import com.app.jetpack.view.ListPlayerView
 
 open class FeedAdapter(
@@ -45,6 +48,9 @@ open class FeedAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindData(getItem(position))
+        holder.itemView.setOnClickListener {
+            FeedDetailActivity.startActivity(context, getItem(position), category)
+        }
     }
 
     inner class ViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {

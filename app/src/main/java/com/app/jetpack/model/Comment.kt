@@ -8,7 +8,7 @@ data class Comment(
     var commentId: Long = 0L,
     var userId: Long = 0L,
     var commentType: Int = 0,
-    var createTime: Int = 0,
+    var createTime: Long = 0L,
     var commentCount: Int = 0,
     var likeCount: Int = 0,
     var commentText: String? = "",

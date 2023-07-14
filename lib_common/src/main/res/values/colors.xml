@@ -9,4 +9,7 @@
     <color name="color_999999">#999999</color>
     <color name="color_white">#FFFFFF</color>
     <color name="color_FF678F">#FF678F</color>
+    <color name="color_transparent">#00000000</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_divider">#F2F2F2</color>
 </resources>

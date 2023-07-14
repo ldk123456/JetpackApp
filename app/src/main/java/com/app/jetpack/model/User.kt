@@ -1,5 +1,8 @@
 package com.app.jetpack.model
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import com.app.jetpack.BR
 import java.io.Serializable
 
 data class User(
@@ -19,5 +22,11 @@ data class User(
     var commentCount: Int = 0,
     var favoriteCount: Int = 0,
     var feedCount: Int = 0,
+) : Serializable, BaseObservable() {
+    @get:Bindable
     var hasFollow: Boolean = false
-) : Serializable
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR._all)
+        }
+}

@@ -25,14 +25,14 @@ import com.app.lib_common.ext.dp
 import com.app.lib_common.ext.getScreenHeight
 import com.app.lib_common.util.ViewHelper
 import com.app.lib_common.util.ViewHelper.setViewOutline
-import com.app.lib_common.view.RoundFragmentLayout
+import com.app.lib_common.view.CornerFragmentLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ShareDialog(context: Context) : AlertDialog(context) {
 
-    private lateinit var mRootLayout: RoundFragmentLayout
+    private lateinit var mRootLayout: CornerFragmentLayout
 
     private lateinit var mAdapter: ShareAdapter
     private val mShareItems = ArrayList<ResolveInfo>()
@@ -44,7 +44,7 @@ class ShareDialog(context: Context) : AlertDialog(context) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
 
-        mRootLayout = RoundFragmentLayout(context).apply {
+        mRootLayout = CornerFragmentLayout(context).apply {
             setBackgroundColor(Color.WHITE)
             setViewOutline(20.dp, ViewHelper.RADIUS_TOP)
         }

@@ -1,5 +1,6 @@
 package com.app.jetpack.ui.base
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.DataSource
@@ -44,5 +45,5 @@ abstract class BasePagedViewModel<T : Any> : ViewModel() {
 
     fun getDataSource() = mDataSource
 
-    fun getBoundaryPagedData() = mBoundaryPagedData
+    fun getBoundaryPagedData(): LiveData<Boolean> = mBoundaryPagedData
 }

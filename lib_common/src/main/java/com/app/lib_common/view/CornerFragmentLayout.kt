@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.app.lib_common.util.ViewHelper.setViewOutline
 
-class RoundFragmentLayout @JvmOverloads constructor(
+class CornerFragmentLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,

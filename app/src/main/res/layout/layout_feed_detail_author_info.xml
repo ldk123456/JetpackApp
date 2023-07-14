@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="feed"
+            type="com.app.jetpack.model.Feed" />
+
+        <variable
+            name="leftMargin"
+            type="Integer" />
+
+        <variable
+            name="fullScreen"
+            type="Boolean" />
+
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
+        <import type="com.app.lib_common.util.TimeUtil" />
+
+        <import type="com.app.jetpack.ui.home.InteractionHelper" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_transparent"
+        android:paddingStart="@{leftMargin}"
+        android:paddingTop="@dimen/dp_3"
+        android:paddingBottom="@dimen/dp_3"
+        tools:ignore="RtlSymmetry">
+
+        <com.app.jetpack.view.BindingImageView
+            android:id="@+id/iv_author_avatar"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_1"
+            app:image_url="@{feed.author.avatar}"
+            app:is_circle="@{true}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_3"
+            android:text="@{feed.author.name}"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/iv_author_avatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:backgroundTint="@{fullScreen?@color/color_transparent:@color/color_theme}"
+            android:gravity="center"
+            android:onClick="@{()->InteractionHelper.toggleFollowUser(owner,feed.author)}"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingEnd="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:text="@{feed.author.hasFollow?@string/has_followed:@string/follow}"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/sp_14"
+            app:cornerRadius="@dimen/dp_13"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@{fullScreen?@color/color_white:@color/color_transparent}"
+            app:strokeWidth="@dimen/dp_1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
