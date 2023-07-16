@@ -32,4 +32,5 @@
     <dimen name="dp_1">1dp</dimen>
     <dimen name="dp_50">50dp</dimen>
     <dimen name="dp_14">14dp</dimen>
+    <dimen name="dp_6">6dp</dimen>
 </resources>

@@ -5,12 +5,14 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.alibaba.fastjson2.JSONObject
+import com.app.jetpack.core.DATA_FROM_INTERACTION
 import com.app.jetpack.model.Comment
 import com.app.jetpack.model.Feed
 import com.app.jetpack.model.User
 import com.app.jetpack.ui.ShareDialog
 import com.app.jetpack.ui.login.UserManager
 import com.app.lib_common.app.AppGlobals
+import com.app.lib_common.app.LiveDataBus
 import com.app.lib_network.ApiService
 import com.app.lib_network.core.JsonCallback
 import com.app.lib_network.response.ApiResponse
@@ -35,6 +37,7 @@ object InteractionHelper {
                     override fun onSuccess(response: ApiResponse<JSONObject>) {
                         response.body?.let {
                             feed.ugc?.hasLiked = it.getBoolean("hasLiked") ?: false
+                            LiveDataBus.with<Feed>(DATA_FROM_INTERACTION).postValue(feed)
                         }
                     }
                 })
@@ -101,6 +104,7 @@ object InteractionHelper {
                         override fun onSuccess(response: ApiResponse<JSONObject>) {
                             response.body?.let {
                                 feed.ugc?.shareCount = it.getIntValue("count")
+                                LiveDataBus.with<Feed>(DATA_FROM_INTERACTION).postValue(feed)
                             }
                         }
                     })
@@ -117,6 +121,7 @@ object InteractionHelper {
                     override fun onSuccess(response: ApiResponse<JSONObject>) {
                         response.body?.let {
                             feed.ugc?.hasFavorite = it.getBoolean("hasFavorite") ?: false
+                            LiveDataBus.with<Feed>(DATA_FROM_INTERACTION).postValue(feed)
                         }
                     }
                 })
@@ -124,15 +129,16 @@ object InteractionHelper {
     }
 
     @JvmStatic
-    fun toggleFollowUser(owner: LifecycleOwner, user: User) {
+    fun toggleFollowUser(owner: LifecycleOwner, feed: Feed) {
         doAfterLogin(owner) {
             ApiService.get<JSONObject>("/ugc/toggleUserFollow")
                 .addParam("followUserId", UserManager.getUserId())
-                .addParam("userId", user.userId)
+                .addParam("userId", feed.author?.userId ?: 0)
                 .execute(object : JsonCallback<JSONObject> {
                     override fun onSuccess(response: ApiResponse<JSONObject>) {
                         response.body?.let {
-                            user.hasFollow = it.getBoolean("hasLiked") ?: false
+                            feed.author?.hasFollow = it.getBoolean("hasLiked") ?: false
+                            LiveDataBus.with<Feed>(DATA_FROM_INTERACTION).postValue(feed)
                         }
                     }
                 })

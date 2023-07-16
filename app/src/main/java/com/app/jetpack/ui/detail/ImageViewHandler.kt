@@ -39,5 +39,6 @@ class ImageViewHandler(activity: FragmentActivity) : ViewHandler(activity) {
                 mImageBinding.title.isVisible = !visible
             }
         })
+        handleEmpty(false)
     }
 }

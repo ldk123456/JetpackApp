@@ -6,15 +6,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.app.jetpack.core.DATA_FROM_INTERACTION
 import com.app.jetpack.core.KEY_FEED
 import com.app.jetpack.databinding.LayoutFeedTypeImageBinding
 import com.app.jetpack.databinding.LayoutFeedTypeVideoBinding
 import com.app.jetpack.model.Feed
 import com.app.jetpack.ui.detail.FeedDetailActivity
 import com.app.jetpack.view.ListPlayerView
+import com.app.lib_common.app.LiveDataBus
 
 open class FeedAdapter(
     private val context: Context,
@@ -47,9 +50,29 @@ open class FeedAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindData(getItem(position))
+        val feed = getItem(position) ?: return
+        holder.bindData(feed)
         holder.itemView.setOnClickListener {
-            FeedDetailActivity.startActivity(context, getItem(position), category)
+            FeedDetailActivity.startActivity(context, feed, category)
+            if (mFeedObserver == null) {
+                mFeedObserver = FeedObserver()
+                LiveDataBus.with<Feed>(DATA_FROM_INTERACTION)
+                    .observe(context as LifecycleOwner, mFeedObserver!!)
+            }
+            mFeedObserver?.feed = feed
+        }
+    }
+
+    private var mFeedObserver: FeedObserver? = null
+
+    private class FeedObserver : Observer<Feed> {
+        var feed: Feed? = null
+        override fun onChanged(value: Feed) {
+            feed?.takeIf { value.id == it.id }?.let {
+                it.author = value.author
+                it.ugc = value.ugc
+                it.notifyChange()
+            }
         }
     }
 

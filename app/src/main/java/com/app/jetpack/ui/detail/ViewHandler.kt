@@ -39,7 +39,7 @@ abstract class ViewHandler(protected val activity: FragmentActivity) {
 
     private var mEmptyView: EmptyView? = null
 
-    private fun handleEmpty(hasData: Boolean) {
+    fun handleEmpty(hasData: Boolean) {
         if (hasData) {
             mCommentAdapter.removeHeaderView(mEmptyView)
         } else {

@@ -18,7 +18,6 @@ data class Feed(
     var height: Int = 0,
     var url: String? = "",
     var cover: String? = "",
-    var author: User? = null,
     var topComment: Comment? = null,
 ) : Serializable, BaseObservable() {
     companion object {
@@ -34,4 +33,7 @@ data class Feed(
             }
             return field!!
         }
+
+    @get:Bindable
+    var author: User? = null
 }
