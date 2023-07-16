@@ -1,5 +1,6 @@
 package com.app.jetpack.model
 
+import androidx.databinding.BaseObservable
 import java.io.Serializable
 
 data class Comment(
@@ -18,7 +19,7 @@ data class Comment(
     var height: Int = 0,
     var hasLiked: Boolean = false,
     var author: User? = null,
-) : Serializable {
+) : Serializable, BaseObservable() {
     var ugc: Ugc? = null
         get() {
             if (field == null) {

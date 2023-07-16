@@ -2,7 +2,10 @@ package com.app.jetpack.ui.home
 
 import android.content.Context
 import android.content.Intent
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.alibaba.fastjson2.JSONObject
 import com.app.jetpack.core.DATA_FROM_INTERACTION
@@ -143,5 +146,36 @@ object InteractionHelper {
                     }
                 })
         }
+    }
+
+    @JvmStatic
+    fun deleteFeedComment(context: Context, itemId: Long, commentId: Long): LiveData<Boolean> {
+        val liveData = MutableLiveData<Boolean>()
+        AlertDialog.Builder(context)
+            .setNegativeButton("删除") { dialog, _ ->
+                dialog.dismiss()
+                deleteFeedComment(liveData, itemId, commentId)
+            }
+            .setPositiveButton("取消") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setMessage("确定要删除这条评论吗？")
+            .create().show()
+        return liveData
+    }
+
+    private fun deleteFeedComment(liveData: MutableLiveData<Boolean>, itemId: Long, commentId: Long) {
+        ApiService.get<JSONObject>("/comment/deleteComment")
+            .addParam("userId", UserManager.getUserId())
+            .addParam("commentId", commentId)
+            .addParam("itemId", itemId)
+            .execute(object : JsonCallback<JSONObject> {
+                override fun onSuccess(response: ApiResponse<JSONObject>) {
+                    response.body?.let {
+                        val result = it.getBooleanValue("result", false)
+                        liveData.postValue(result)
+                    }
+                }
+            })
     }
 }

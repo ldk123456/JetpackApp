@@ -5,10 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
+import androidx.paging.ItemKeyedDataSource
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.app.jetpack.databinding.LayoutFeedCommentListItemBinding
 import com.app.jetpack.model.Comment
+import com.app.jetpack.ui.base.MutableItemKeyedDataSource
+import com.app.jetpack.ui.home.InteractionHelper
 import com.app.jetpack.ui.login.UserManager
 import com.app.lib_common.base.BasePagedListAdapter
 import com.app.lib_common.ext.dp
@@ -32,10 +35,31 @@ class FeedCommentAdapter(private val activity: FragmentActivity) :
     }
 
     override fun onBindDataViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindData(activity, getItem(position))
+        val comment = getItem(position) ?: return
+        holder.bindData(activity, comment)
+        holder.binding.commentDelete.setOnClickListener {
+            InteractionHelper.deleteFeedComment(activity, comment.itemId, comment.commentId)
+                .observe(activity) {
+                    val originDataSource = currentList?.dataSource as? ItemKeyedDataSource<Int, Comment>
+                    if (!it || originDataSource == null) {
+                        return@observe
+                    }
+                    val dataSource = object : MutableItemKeyedDataSource<Int, Comment>(originDataSource) {
+                        override fun getKey(item: Comment): Int {
+                            return item.id
+                        }
+                    }
+                    for (item in currentList!!) {
+                        if (comment != item) {
+                            dataSource.data.add(item)
+                        }
+                    }
+                    submitList(dataSource.buildNewPagedList(currentList?.config!!))
+                }
+        }
     }
 
-    class ViewHolder(private val binding: LayoutFeedCommentListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: LayoutFeedCommentListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindData(activity: FragmentActivity, comment: Comment?) {
             comment ?: return
             binding.owner = activity

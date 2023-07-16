@@ -4,11 +4,15 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.ItemKeyedDataSource
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.jetpack.R
 import com.app.jetpack.databinding.LayoutFeedDetailBottomInateractionBinding
+import com.app.jetpack.model.Comment
 import com.app.jetpack.model.Feed
+import com.app.jetpack.ui.base.MutableItemKeyedDataSource
+import com.app.lib_common.ext.safeAs
 import com.app.lib_common.view.EmptyView
 
 abstract class ViewHandler(protected val activity: FragmentActivity) {
@@ -18,6 +22,8 @@ abstract class ViewHandler(protected val activity: FragmentActivity) {
     protected lateinit var mInteractionBinding: LayoutFeedDetailBottomInateractionBinding
 
     protected val mViewModel = ViewModelProvider(activity)[FeedDetailViewModel::class.java]
+
+    private var mCommentDialog: CommentDialog? = null
 
     @CallSuper
     open fun bindInitData(feed: Feed) {
@@ -35,6 +41,9 @@ abstract class ViewHandler(protected val activity: FragmentActivity) {
             handleEmpty(it.isNotEmpty())
         }
         handleEmpty(false)
+        mInteractionBinding.inputView.setOnClickListener {
+            showCommentDialog()
+        }
     }
 
     private var mEmptyView: EmptyView? = null
@@ -54,5 +63,29 @@ abstract class ViewHandler(protected val activity: FragmentActivity) {
             }
             mCommentAdapter.addHeaderView(mEmptyView)
         }
+    }
+
+    private fun showCommentDialog() {
+        val dialog = mCommentDialog ?: run {
+            val commentDialog = CommentDialog.newInstance(mFeed.itemId)
+            mCommentDialog = commentDialog
+            commentDialog
+        }
+        dialog.setOnCommentAddListener(object : CommentDialog.OnCommentAddListener {
+            override fun onCommentAdd(comment: Comment) {
+                val dataSource = object : MutableItemKeyedDataSource<Int, Comment>(
+                    mViewModel.getDataSource() as ItemKeyedDataSource<Int, Comment>
+                ) {
+                    override fun getKey(item: Comment): Int {
+                        return comment.id
+                    }
+                }
+                dataSource.data.add(comment)
+                dataSource.data.addAll(mCommentAdapter.currentList ?: emptyList())
+                mCommentAdapter.submitList(dataSource.buildNewPagedList(mCommentAdapter.currentList?.config!!))
+                mCommentDialog = null
+            }
+        })
+        dialog.show(activity.supportFragmentManager, CommentDialog.TAG)
     }
 }
