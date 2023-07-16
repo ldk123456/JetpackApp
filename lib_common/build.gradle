@@ -75,8 +75,17 @@ dependencies {
     api 'com.alibaba:fastjson:2.0.33'
 
     // 协程
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
+    api 'androidx.camera:camera-core:1.0.0-alpha04'
+    api 'androidx.camera:camera-camera2:1.0.0-alpha04'
+    api 'androidx.camera:camera-view:1.0.0-alpha01'
+    api 'androidx.camera:camera-extensions:1.0.0-alpha01'
+
+    api 'com.github.chrisbanes:PhotoView:2.3.0'
+
+    api 'com.aliyun.dpa:oss-android-sdk:+'
 
     api project(':lib_base')
 }

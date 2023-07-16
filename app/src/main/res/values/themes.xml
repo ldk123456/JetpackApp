@@ -8,4 +8,9 @@
     <style name="FeedDetail_Theme" parent="Theme.JetpackApp">
         <item name="android:windowFullscreen">true</item>
     </style>
+
+    <style name="Capture_Theme" parent="Theme.JetpackApp">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
 </resources>
