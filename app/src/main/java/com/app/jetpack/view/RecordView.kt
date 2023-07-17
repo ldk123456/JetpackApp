@@ -116,7 +116,7 @@ class RecordView @JvmOverloads constructor(
         super.onDraw(canvas)
         if (mIsRecording) {
             canvas?.drawCircle(width / 2f, height / 2f, width / 2f, mFillPaint)
-            val sweepAngle = (mProgressValue / mMaxProgressValue) * 360f
+            val sweepAngle = (mProgressValue * 1f / mMaxProgressValue) * 360
             canvas?.drawArc(0f, 0f, width.toFloat(), height.toFloat(), -90f, sweepAngle, false, mProgressPaint)
         } else {
             canvas?.drawCircle(width / 2f, height / 2f, mRadius.toFloat(), mFillPaint)

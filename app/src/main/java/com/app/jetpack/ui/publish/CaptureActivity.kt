@@ -2,23 +2,20 @@ package com.app.jetpack.ui.publish
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.media.MediaScannerConnection
+import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.util.Rational
-import android.util.Size
-import android.view.Surface
-import android.view.ViewGroup
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.camera.core.CameraX
+import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureConfig
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
-import androidx.camera.core.PreviewConfig
 import androidx.camera.core.VideoCapture
-import androidx.camera.core.VideoCaptureConfig
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import com.app.jetpack.R
@@ -26,31 +23,27 @@ import com.app.jetpack.core.PATH_MAIN_PUBLISH
 import com.app.jetpack.databinding.ActivityCaptureBinding
 import com.app.jetpack.view.RecordView
 import com.app.lib_common.base.BaseActivity
-import com.app.lib_common.ext.safeAs
 import com.app.lib_nav_annotation.annotation.ActivityDestination
 import com.google.android.exoplayer2.util.MimeTypes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @ActivityDestination(PATH_MAIN_PUBLISH)
 class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
 
     companion object {
         private const val PERMISSION_CODE = 1000
-        private val PERMISSIONS = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
+        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
     }
 
     private lateinit var mBinding: ActivityCaptureBinding
 
     private val mDeniedPermission = ArrayList<String>()
 
-    private val mLensFacing = CameraX.LensFacing.BACK
-    private val mRotation = Surface.ROTATION_0
-    private val mResolution = Size(1280, 720)
-    private val mRational = Rational(9, 16)
-
-    private lateinit var mPreview: Preview
     private lateinit var mImageCapture: ImageCapture
     private lateinit var mVideoCapture: VideoCapture
 
@@ -62,8 +55,18 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
         super.onCreate(savedInstanceState)
         mBinding = ActivityCaptureBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_CODE)
         mBinding.recordView.setOnRecordListener(this)
+        if (allPermissionsGranted()) {
+            bindCameraX()
+        } else {
+            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSION_CODE)
+        }
+    }
+
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ActivityCompat.checkSelfPermission(
+            baseContext, it
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -95,80 +98,92 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
 
     @SuppressLint("RestrictedApi")
     private fun bindCameraX() {
-        mPreview = Preview(
-            PreviewConfig.Builder()
-                .setLensFacing(mLensFacing)
-                .setTargetRotation(mRotation)
-                .setTargetResolution(mResolution)
-                .setTargetAspectRatio(mRational)
-                .build()
-        )
-        mImageCapture = ImageCapture(
-            ImageCaptureConfig.Builder()
-                .setLensFacing(mLensFacing)
-                .setTargetRotation(mRotation)
-                .setTargetResolution(mResolution)
-                .setTargetAspectRatio(mRational)
-                .build()
-        )
-        mVideoCapture = VideoCapture(
-            VideoCaptureConfig.Builder()
-                .setLensFacing(mLensFacing)
-                .setTargetRotation(mRotation)
-                .setTargetResolution(mResolution)
-                .setTargetAspectRatio(mRational)
-                .setVideoFrameRate(25)
-                .setBitRate(3 * 1024 * 1024)
-                .build()
-        )
-        mPreview.setOnPreviewOutputUpdateListener {
-            mBinding.textureView.let { textureView ->
-                textureView.parent.safeAs<ViewGroup>()?.apply {
-                    removeView(textureView)
-                    addView(textureView, 0)
-                }
-                textureView.setSurfaceTexture(it.surfaceTexture)
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        cameraProviderFuture.addListener({
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            val preview = Preview.Builder().build().also {
+                it.setSurfaceProvider(mBinding.previewView.surfaceProvider)
             }
-        }
+            mVideoCapture = VideoCapture.Builder().build()
+            mImageCapture = ImageCapture.Builder().build()
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            runCatching {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    this@CaptureActivity,
+                    cameraSelector,
+                    preview,
+                    mImageCapture,
+                    mVideoCapture
+                )
+            }
+        }, ActivityCompat.getMainExecutor(this))
     }
 
     override fun onClick() {
         mIsPicture = true
-        val file = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-            "${System.currentTimeMillis()}.jpeg"
-        )
-        mImageCapture.takePicture(file, object : ImageCapture.OnImageSavedListener {
-            override fun onImageSaved(file: File) {
-                onFileSaved(file)
+        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.getDefault()).format(System.currentTimeMillis())
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
             }
+        }
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(
+            contentResolver,
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            contentValues
+        ).build()
+        mImageCapture.takePicture(
+            outputOptions,
+            ActivityCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+//                    onFileSaved(file)
+                }
 
-            override fun onError(useCaseError: ImageCapture.UseCaseError, message: String, cause: Throwable?) {
-                showErrorToast(message)
-            }
-        })
+                override fun onError(exception: ImageCaptureException) {
+                    showErrorToast(exception.message.orEmpty())
+                }
+            })
     }
 
     @SuppressLint("RestrictedApi")
     override fun onLongClick() {
         mIsPicture = false
-        val file = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-            "${System.currentTimeMillis()}.mp4"
-        )
-        mVideoCapture.startRecording(file, object : VideoCapture.OnVideoSavedListener {
-            override fun onVideoSaved(file: File?) {
-                file?.let {
-                    onFileSaved(it)
-                } ?: run {
-                    showErrorToast("拍摄失败。")
+        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.getDefault())
+            .format(System.currentTimeMillis())
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/CameraX-Video")
+            }
+        }
+        val mediaStoreOutputOptions = VideoCapture.OutputFileOptions
+            .Builder(contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)
+            .build()
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        mVideoCapture.startRecording(
+            mediaStoreOutputOptions,
+            ActivityCompat.getMainExecutor(this),
+            object : VideoCapture.OnVideoSavedCallback {
+                override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
+//                    onFileSaved(file)
                 }
-            }
 
-            override fun onError(useCaseError: VideoCapture.UseCaseError?, message: String?, cause: Throwable?) {
-                showErrorToast(message ?: "拍摄失败！")
-            }
-        })
+                override fun onError(videoCaptureError: Int, message: String, cause: Throwable?) {
+                    showErrorToast(message)
+                }
+
+            })
     }
 
     @SuppressLint("RestrictedApi")

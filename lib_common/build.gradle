@@ -78,10 +78,12 @@ dependencies {
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
-    api 'androidx.camera:camera-core:1.0.0-alpha04'
-    api 'androidx.camera:camera-camera2:1.0.0-alpha04'
-    api 'androidx.camera:camera-view:1.0.0-alpha01'
-    api 'androidx.camera:camera-extensions:1.0.0-alpha01'
+    api 'androidx.camera:camera-core:1.2.3'
+    api 'androidx.camera:camera-camera2:1.2.3'
+    api 'androidx.camera:camera-view:1.2.3'
+    api 'androidx.camera:camera-extensions:1.2.3'
+    api 'androidx.camera:camera-lifecycle:1.2.3'
+//    api 'androidx.camera:camera-video:1.1.0-beta02'
 
     api 'com.github.chrisbanes:PhotoView:2.3.0'
 
