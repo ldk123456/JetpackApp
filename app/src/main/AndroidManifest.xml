@@ -99,6 +99,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.publish.PreviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.detail.FeedDetailActivity"
             android:exported="false"
             android:theme="@style/FeedDetail_Theme" />
@@ -111,8 +114,8 @@
 
         <activity
             android:name=".ui.publish.CaptureActivity"
-            android:theme="@style/Capture_Theme"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Capture_Theme" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -3,8 +3,9 @@ package com.app.jetpack.ui.publish
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -20,14 +21,17 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import com.app.jetpack.R
 import com.app.jetpack.core.PATH_MAIN_PUBLISH
+import com.app.jetpack.core.RESULT_FILE_HEIGHT
+import com.app.jetpack.core.RESULT_FILE_PATH
+import com.app.jetpack.core.RESULT_FILE_TYPE
+import com.app.jetpack.core.RESULT_FILE_WIDTH
 import com.app.jetpack.databinding.ActivityCaptureBinding
 import com.app.jetpack.view.RecordView
 import com.app.lib_common.base.BaseActivity
+import com.app.lib_common.util.FileUtil
 import com.app.lib_nav_annotation.annotation.ActivityDestination
-import com.google.android.exoplayer2.util.MimeTypes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -36,7 +40,10 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
 
     companion object {
         private const val PERMISSION_CODE = 1000
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
+        private val REQUIRED_PERMISSIONS = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO,
+        )
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
     }
 
@@ -48,7 +55,7 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
     private lateinit var mVideoCapture: VideoCapture
 
     private var mIsPicture = false
-    private var mOutputFilePath = ""
+    private var mOutputFilePath: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Capture_Theme)
@@ -140,7 +147,7 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
             ActivityCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-//                    onFileSaved(file)
+                    onFileSaved(outputFileResults.savedUri)
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -176,7 +183,7 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
             ActivityCompat.getMainExecutor(this),
             object : VideoCapture.OnVideoSavedCallback {
                 override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
-//                    onFileSaved(file)
+                    onFileSaved(outputFileResults.savedUri)
                 }
 
                 override fun onError(videoCaptureError: Int, message: String, cause: Throwable?) {
@@ -191,15 +198,31 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
         mVideoCapture.stopRecording()
     }
 
-    private fun onFileSaved(file: File) {
-        mOutputFilePath = file.absolutePath
-        val mimeType = if (mIsPicture) MimeTypes.IMAGE_JPEG else MimeTypes.VIDEO_MP4
-        MediaScannerConnection.scanFile(this, arrayOf(mOutputFilePath), arrayOf(mimeType), null)
+    private fun onFileSaved(uri: Uri?) {
+        mOutputFilePath = FileUtil.getPathFromUri(this, uri).orEmpty()
+        if (mOutputFilePath.isEmpty()) {
+            return
+        }
+        PreviewActivity.startActivityForResult(this, mOutputFilePath, !mIsPicture, true)
     }
 
     private fun showErrorToast(message: String) {
         lifecycleScope.launch(Dispatchers.Main) {
             Toast.makeText(this@CaptureActivity, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PreviewActivity.REQ_PREVIEW && resultCode == RESULT_OK) {
+            val intent = Intent().apply {
+                putExtra(RESULT_FILE_PATH, mOutputFilePath)
+                putExtra(RESULT_FILE_WIDTH, 1280)
+                putExtra(RESULT_FILE_HEIGHT, 720)
+                putExtra(RESULT_FILE_TYPE, mIsPicture)
+            }
+            setResult(RESULT_OK, intent)
+            finish()
         }
     }
 }
