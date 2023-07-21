@@ -11,7 +11,9 @@ object TimeUtil {
             time
         }
         val diff = (Calendar.getInstance().timeInMillis - t) / 1000
-        return if (diff < 60) {
+        return if (diff <= 5) {
+            return "刚刚"
+        } else if (diff < 60) {
             "${diff}秒前"
         } else if (diff < 60 * 60) {
             "${diff / 60}分钟前"

@@ -7,6 +7,7 @@ const val KEY_ITEM_ID = "key_item_id"
 const val KEY_PREVIEW_PATH = "key_preview_path"
 const val KEY_IS_VIDEO = "key_is_video"
 const val KEY_SHOW_ACTION_BTN = "key_show_action_btn"
+const val KEY_IS_LOCAL_FILE = "key_is_local_file"
 
 const val DATA_FROM_INTERACTION = "data_from_interaction"
 

@@ -1,8 +1,8 @@
 package com.app.jetpack.ui.detail
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.paging.ItemKeyedDataSource
@@ -13,6 +13,7 @@ import com.app.jetpack.model.Comment
 import com.app.jetpack.ui.base.MutableItemKeyedDataSource
 import com.app.jetpack.ui.home.InteractionHelper
 import com.app.jetpack.ui.login.UserManager
+import com.app.jetpack.ui.publish.PreviewActivity
 import com.app.lib_common.base.BasePagedListAdapter
 import com.app.lib_common.ext.dp
 
@@ -56,6 +57,11 @@ class FeedCommentAdapter(private val activity: FragmentActivity) :
                     }
                     submitList(dataSource.buildNewPagedList(currentList?.config!!))
                 }
+        }
+        holder.binding.commentCover.setOnClickListener {
+            val isVideo = Comment.COMMENT_TYPE_VIDEO == comment.commentType
+            val path = if (isVideo) comment.videoUrl else comment.imageUrl
+            PreviewActivity.startActivityForResult(activity as AppCompatActivity, path.orEmpty(), isVideo, false)
         }
     }
 

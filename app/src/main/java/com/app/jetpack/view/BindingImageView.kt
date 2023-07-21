@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.view.ViewGroup.MarginLayoutParams
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -115,12 +114,12 @@ class BindingImageView @JvmOverloads constructor(
         layoutParams.apply {
             this.width = finalWidth
             this.height = finalHeight
-            safeAs<LinearLayoutCompat.LayoutParams>()?.let {
-                it.leftMargin = leftMargin
-            } ?: safeAs<ConstraintLayout.LayoutParams>()?.let {
-                it.leftMargin = leftMargin
-            } ?: safeAs<FrameLayout.LayoutParams>()?.let {
-                it.leftMargin = leftMargin
+            takeIf { it is LinearLayoutCompat.LayoutParams }?.let {
+                it.safeAs<LinearLayoutCompat.LayoutParams>()?.leftMargin = leftMargin
+            } ?: takeIf { it is ConstraintLayout.LayoutParams }?.let {
+                it.safeAs<ConstraintLayout.LayoutParams>()?.leftMargin = leftMargin
+            } ?: takeIf { it is FrameLayout.LayoutParams }?.let {
+                it.safeAs<FrameLayout.LayoutParams>()?.leftMargin = leftMargin
             }
         }
     }

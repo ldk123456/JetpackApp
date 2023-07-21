@@ -30,6 +30,7 @@
             android:id="@+id/comment_icon_video"
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
+            android:layout_gravity="center"
             android:src="@drawable/icon_video_play"
             android:visibility="gone"
             tools:visibility="visible" />
@@ -58,13 +59,14 @@
         android:paddingStart="@dimen/dp_10"
         android:paddingEnd="@dimen/dp_10">
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <com.app.lib_common.view.MyEditTextView
             android:id="@+id/input_view"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/dp_35"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="@drawable/bg_edit_view"
+            android:gravity="center_vertical"
             android:hint="@string/comment_hint"
             android:paddingStart="@dimen/dp_10"
             android:textColor="@color/color_333333"

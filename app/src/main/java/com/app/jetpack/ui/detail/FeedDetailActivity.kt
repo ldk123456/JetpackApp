@@ -20,6 +20,8 @@ class FeedDetailActivity : BaseActivity() {
         }
     }
 
+    private lateinit var mViewHandler: ViewHandler
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.FeedDetail_Theme)
         super.onCreate(savedInstanceState)
@@ -30,11 +32,16 @@ class FeedDetailActivity : BaseActivity() {
             return
         }
 
-        val viewHandler = if (feed.itemType == Feed.TYPE_IMAGE) {
+        mViewHandler = if (feed.itemType == Feed.TYPE_IMAGE) {
             ImageViewHandler(this)
         } else {
             VideoViewHandler(this)
         }
-        viewHandler.bindInitData(feed)
+        mViewHandler.bindInitData(feed)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        mViewHandler.onActivityResult(requestCode, resultCode, data)
     }
 }

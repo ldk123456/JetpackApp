@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.camera.core.CameraSelector
@@ -18,6 +19,7 @@ import androidx.camera.core.Preview
 import androidx.camera.core.VideoCapture
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.app.jetpack.R
 import com.app.jetpack.core.PATH_MAIN_PUBLISH
@@ -45,12 +47,20 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
             Manifest.permission.RECORD_AUDIO,
         )
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+
+        const val REQ_CAPTURE = 10001
+
+        fun startActivityForResult(activity: FragmentActivity) {
+            val intent = Intent(activity, CaptureActivity::class.java)
+            activity.startActivityForResult(intent, REQ_CAPTURE)
+        }
     }
 
     private lateinit var mBinding: ActivityCaptureBinding
 
     private val mDeniedPermission = ArrayList<String>()
 
+    private lateinit var mCameraProvider: ProcessCameraProvider
     private lateinit var mImageCapture: ImageCapture
     private lateinit var mVideoCapture: VideoCapture
 
@@ -107,7 +117,7 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
     private fun bindCameraX() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            mCameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder().build().also {
                 it.setSurfaceProvider(mBinding.previewView.surfaceProvider)
             }
@@ -115,8 +125,8 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
             mImageCapture = ImageCapture.Builder().build()
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             runCatching {
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
+                mCameraProvider.unbindAll()
+                mCameraProvider.bindToLifecycle(
                     this@CaptureActivity,
                     cameraSelector,
                     preview,
@@ -129,6 +139,7 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
 
     override fun onClick() {
         mIsPicture = true
+        mBinding.captureTips.visibility = View.INVISIBLE
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.getDefault()).format(System.currentTimeMillis())
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
@@ -199,11 +210,17 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
     }
 
     private fun onFileSaved(uri: Uri?) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            mBinding.captureTips.visibility = View.INVISIBLE
+        }
         mOutputFilePath = FileUtil.getPathFromUri(this, uri).orEmpty()
         if (mOutputFilePath.isEmpty()) {
             return
         }
-        PreviewActivity.startActivityForResult(this, mOutputFilePath, !mIsPicture, true)
+        PreviewActivity.startActivityForResult(this, mOutputFilePath, !mIsPicture,
+            showActionBtn = true,
+            isLocalFile = true
+        )
     }
 
     private fun showErrorToast(message: String) {
@@ -217,12 +234,17 @@ class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
         if (requestCode == PreviewActivity.REQ_PREVIEW && resultCode == RESULT_OK) {
             val intent = Intent().apply {
                 putExtra(RESULT_FILE_PATH, mOutputFilePath)
-                putExtra(RESULT_FILE_WIDTH, 1280)
-                putExtra(RESULT_FILE_HEIGHT, 720)
+                putExtra(RESULT_FILE_WIDTH, 720)
+                putExtra(RESULT_FILE_HEIGHT, 1280)
                 putExtra(RESULT_FILE_TYPE, mIsPicture)
             }
             setResult(RESULT_OK, intent)
             finish()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mCameraProvider.unbindAll()
     }
 }

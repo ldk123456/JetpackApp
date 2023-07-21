@@ -2,15 +2,17 @@ package com.app.jetpack.ui.publish
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentActivity
 import com.app.jetpack.R
+import com.app.jetpack.core.KEY_IS_LOCAL_FILE
 import com.app.jetpack.core.KEY_IS_VIDEO
 import com.app.jetpack.core.KEY_PREVIEW_PATH
 import com.app.jetpack.core.KEY_SHOW_ACTION_BTN
 import com.app.jetpack.databinding.ActivityPreviewBinding
+import com.app.jetpack.player.PageListPlayerManager
 import com.app.lib_common.base.BaseActivity
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.ExoPlayer
@@ -24,17 +26,20 @@ class PreviewActivity : BaseActivity(), View.OnClickListener {
         const val REQ_PREVIEW = 1000
 
         fun startActivityForResult(
-            activity: AppCompatActivity,
+            activity: FragmentActivity,
             previewPath: String,
             isVideo: Boolean,
-            showActionBtn: Boolean
+            showActionBtn: Boolean,
+            isLocalFile: Boolean = false
         ) {
             val intent = Intent(activity, PreviewActivity::class.java).apply {
                 putExtra(KEY_PREVIEW_PATH, previewPath)
                 putExtra(KEY_IS_VIDEO, isVideo)
                 putExtra(KEY_SHOW_ACTION_BTN, showActionBtn)
+                putExtra(KEY_IS_LOCAL_FILE, isLocalFile)
             }
             activity.startActivityForResult(intent, REQ_PREVIEW)
+            activity.overridePendingTransition(0, 0)
         }
     }
 
@@ -48,6 +53,9 @@ class PreviewActivity : BaseActivity(), View.OnClickListener {
     }
     private val mShowActionBtn by lazy {
         intent.getBooleanExtra(KEY_SHOW_ACTION_BTN, false)
+    }
+    private val mIsLocalFile by lazy {
+        intent.getBooleanExtra(KEY_IS_LOCAL_FILE, false)
     }
 
     private var mPlayer: ExoPlayer? = null
@@ -81,18 +89,27 @@ class PreviewActivity : BaseActivity(), View.OnClickListener {
         mPlayer = ExoPlayer.Builder(this).build()
         mBinding.playerView.player = mPlayer
 
-        val dataSpec = DataSpec(Uri.parse(mPreviewPath))
-        val dataSource = FileDataSource()
-        runCatching {
-            dataSource.open(dataSpec)
-            val uri = dataSource.uri
-            val source = ProgressiveMediaSource.Factory(FileDataSource.Factory())
-                .createMediaSource(MediaItem.fromUri(uri!!))
-            mPlayer?.setMediaSource(source)
-            mPlayer?.prepare()
-            mPlayer?.playWhenReady = true
-            mBinding.playerView.isVisible = true
+        if (mIsLocalFile) {
+            val dataSpec = DataSpec(Uri.parse(mPreviewPath))
+            val dataSource = FileDataSource()
+            runCatching {
+                dataSource.open(dataSpec)
+                val uri = dataSource.uri
+                val source = ProgressiveMediaSource.Factory(FileDataSource.Factory())
+                    .createMediaSource(MediaItem.fromUri(uri!!))
+                mPlayer?.setMediaSource(source)
+                mPlayer?.prepare()
+                mPlayer?.playWhenReady = true
+            }
+        } else {
+            val mediaSource = PageListPlayerManager.createMediaSource(mPreviewPath)
+            mPlayer?.apply {
+                setMediaSource(mediaSource)
+                prepare()
+                mPlayer?.playWhenReady = true
+            }
         }
+        mBinding.playerView.isVisible = true
     }
 
     override fun onClick(v: View?) {

@@ -20,6 +20,11 @@ data class Comment(
     var hasLiked: Boolean = false,
     var author: User? = null,
 ) : Serializable, BaseObservable() {
+    companion object {
+        const val COMMENT_TYPE_IMAGE_TEXT = 2
+        const val COMMENT_TYPE_VIDEO = 3
+    }
+
     var ugc: Ugc? = null
         get() {
             if (field == null) {

@@ -1,5 +1,6 @@
 package com.app.jetpack.ui.detail
 
+import android.content.Intent
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.FragmentActivity
@@ -12,7 +13,6 @@ import com.app.jetpack.databinding.LayoutFeedDetailBottomInateractionBinding
 import com.app.jetpack.model.Comment
 import com.app.jetpack.model.Feed
 import com.app.jetpack.ui.base.MutableItemKeyedDataSource
-import com.app.lib_common.ext.safeAs
 import com.app.lib_common.view.EmptyView
 
 abstract class ViewHandler(protected val activity: FragmentActivity) {
@@ -87,5 +87,9 @@ abstract class ViewHandler(protected val activity: FragmentActivity) {
             }
         })
         dialog.show(activity.supportFragmentManager, CommentDialog.TAG)
+    }
+
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        mCommentDialog?.takeIf { it.isAdded }?.onActivityResult(requestCode, resultCode, data)
     }
 }
