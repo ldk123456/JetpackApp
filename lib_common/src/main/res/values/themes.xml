@@ -45,4 +45,12 @@
             <enum name="bottom" value="4" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="ViewAnchorBehavior">
+        <attr name="anchorId" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="ViewZoomBehavior">
+        <attr name="min_height" format="dimension" />
+        <attr name="scrolling_id" format="integer" />
+    </declare-styleable>
 </resources>

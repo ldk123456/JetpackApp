@@ -27,6 +27,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/author_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_transparent"
@@ -53,10 +54,23 @@
             android:layout_marginStart="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_3"
             android:text="@{feed.author.name}"
+            android:textColor="@{fullScreen?@color/color_white:@color/black}"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/iv_author_avatar"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/create_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_2"
+            android:text="@{TimeUtil.calculate(feed.createTime)}"
+            android:textColor="@{fullScreen?@color/color_white:@color/black}"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintStart_toEndOf="@+id/iv_author_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/tv_author_name" />
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"

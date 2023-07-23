@@ -71,7 +71,7 @@
 
         <include
             android:id="@+id/interaction_layout"
-            layout="@layout/layout_feed_detail_bottom_inateraction"
+            layout="@layout/layout_feed_detail_bottom_interaction"
             app:feed="@{feed}"
             app:fullScreen="@{false}"
             app:owner="@{owner}" />

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -105,8 +106,6 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/comment_text"
             android:layout_width="0dp"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintEnd_toStartOf="@+id/comment_like"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_5"
@@ -116,8 +115,11 @@
             android:text="@{comment.commentText}"
             android:textColor="@color/color_333333"
             android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toStartOf="@+id/comment_like"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/author_avatar"
-            app:layout_constraintTop_toBottomOf="@+id/author_name" />
+            app:layout_constraintTop_toBottomOf="@+id/author_name"
+            tools:ignore="RtlSymmetry" />
 
         <FrameLayout
             android:id="@+id/comment_ext"
@@ -133,8 +135,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:scaleType="center"
-                android:src="@color/color_theme_10" />
+                android:background="@color/color_gray2"
+                android:scaleType="center" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/video_icon"

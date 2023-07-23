@@ -13,26 +13,28 @@ import com.app.jetpack.R
 import com.app.jetpack.databinding.LayoutPlayerViewBinding
 import com.app.jetpack.player.IPlayTarget
 import com.app.jetpack.player.PageListPlayerManager
-import com.app.lib_common.ext.getScreenHeight
 import com.app.lib_common.ext.getScreenWidth
 import com.app.lib_common.ext.safeAs
 import com.app.lib_common.ext.setVisible
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerControlView
 
-class ListPlayerView @JvmOverloads constructor(
+open class ListPlayerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), IPlayTarget,
     PlayerControlView.VisibilityListener, Player.Listener {
 
-    private val binding = LayoutPlayerViewBinding.inflate(LayoutInflater.from(context), this)
+    protected val binding = LayoutPlayerViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private var mCategory: String = ""
-    private var mVideoUrl: String = ""
+    protected var mCategory: String = ""
+    protected var mVideoUrl: String = ""
 
-    private var isPlaying = false
+    private var mIsPlaying = false
+
+    protected var mWidthPx = 0
+    protected var mHeightPx = 0
 
     init {
         binding.ivPlay.setOnClickListener {
@@ -57,6 +59,9 @@ class ListPlayerView @JvmOverloads constructor(
         mCategory = category.orEmpty()
         mVideoUrl = videoUrl
 
+        mWidthPx = width
+        mHeightPx = height
+
         binding.ivCover.setImageUrl(coverUrl)
         if (width < height) {
             binding.ivBlurBg.setBlurImageUrl(coverUrl, 10)
@@ -67,7 +72,7 @@ class ListPlayerView @JvmOverloads constructor(
         setSize(width, height)
     }
 
-    private fun setSize(
+    protected open fun setSize(
         width: Int, height: Int,
         maxWidth: Int = getScreenWidth(),
         maxHeight: Int = getScreenWidth()
@@ -109,6 +114,7 @@ class ListPlayerView @JvmOverloads constructor(
         if (player.playerView == null) {
             return
         }
+        player.switchPlayerView(player.playerView)
         player.playerView?.parent.let {
             if (it != this) {
                 it.safeAs<ViewGroup>()?.removeView(player.playerView)
@@ -131,6 +137,8 @@ class ListPlayerView @JvmOverloads constructor(
                 repeatMode = Player.REPEAT_MODE_ONE
                 player.playUrl = mVideoUrl
             }
+        } else {
+            onPlayerStateChanged(true, Player.STATE_READY)
         }
         player.playerControlView?.addVisibilityListener(this)
         player.exoPlayer?.addListener(this)
@@ -151,7 +159,7 @@ class ListPlayerView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        isPlaying = false
+        mIsPlaying = false
         binding.pbBuffer.isVisible = false
         binding.ivCover.isVisible = true
         binding.ivPlay.isVisible = true
@@ -159,8 +167,10 @@ class ListPlayerView @JvmOverloads constructor(
     }
 
     override fun isPlaying(): Boolean {
-        return isPlaying
+        return mIsPlaying
     }
+
+    fun getPlayerController() = PageListPlayerManager.get(mCategory).playerControlView
 
     override fun onVisibilityChange(visibility: Int) {
         binding.ivPlay.visibility = visibility
@@ -176,7 +186,7 @@ class ListPlayerView @JvmOverloads constructor(
         } else if (Player.STATE_BUFFERING == playbackState) {
             binding.pbBuffer.isVisible = true
         }
-        isPlaying = Player.STATE_READY == playbackState && player.bufferedPosition != 0L && playWhenReady
+        mIsPlaying = Player.STATE_READY == playbackState && player.bufferedPosition != 0L && playWhenReady
         binding.ivPlay.setImageResource(if (isPlaying()) R.drawable.icon_video_pause else R.drawable.icon_video_play)
     }
 }

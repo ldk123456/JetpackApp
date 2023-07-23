@@ -30,6 +30,7 @@ class HomeFragment : BaseListFragment<Feed, HomeViewModel>() {
     private val mFeedType: String by lazy(LazyThreadSafetyMode.NONE) {
         arguments?.getString(KEY_FEED_TYPE) ?: "all"
     }
+    private var mShouldPause = true
 
     private lateinit var mPlayerDetector: PageListPlayerDetector
 
@@ -54,6 +55,10 @@ class HomeFragment : BaseListFragment<Feed, HomeViewModel>() {
             override fun onViewDetachedFromWindow(holder: ViewHolder) {
                 super.onViewDetachedFromWindow(holder)
                 mPlayerDetector.removeTarget(holder.listPlayerView)
+            }
+
+            override fun onStartFeedDetailActivity(feed: Feed) {
+                mShouldPause = Feed.TYPE_VIDEO == feed.itemType
             }
         }
     }
@@ -90,11 +95,14 @@ class HomeFragment : BaseListFragment<Feed, HomeViewModel>() {
 
     override fun onPause() {
         super.onPause()
-        mPlayerDetector.onPause()
+        if (mShouldPause) {
+            mPlayerDetector.onPause()
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        mShouldPause = true
         parentFragment?.let {
             if (it.isVisible && isVisible) {
                 mPlayerDetector.onResume()
@@ -102,7 +110,6 @@ class HomeFragment : BaseListFragment<Feed, HomeViewModel>() {
         } ?: run {
             if (isVisible) {
                 mPlayerDetector.onResume()
-                binding.root.requestFitSystemWindows()
             }
         }
     }

@@ -1,9 +1,9 @@
 package com.app.jetpack.ui.home
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -11,7 +11,6 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.app.jetpack.core.DATA_FROM_INTERACTION
-import com.app.jetpack.core.KEY_FEED
 import com.app.jetpack.databinding.LayoutFeedTypeImageBinding
 import com.app.jetpack.databinding.LayoutFeedTypeVideoBinding
 import com.app.jetpack.model.Feed
@@ -54,6 +53,7 @@ open class FeedAdapter(
         holder.bindData(feed)
         holder.itemView.setOnClickListener {
             FeedDetailActivity.startActivity(context, feed, category)
+            onStartFeedDetailActivity(feed)
             if (mFeedObserver == null) {
                 mFeedObserver = FeedObserver()
                 LiveDataBus.with<Feed>(DATA_FROM_INTERACTION)
@@ -61,6 +61,10 @@ open class FeedAdapter(
             }
             mFeedObserver?.feed = feed
         }
+    }
+
+    open fun onStartFeedDetailActivity(feed: Feed) {
+
     }
 
     private var mFeedObserver: FeedObserver? = null
@@ -79,10 +83,12 @@ open class FeedAdapter(
     inner class ViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         var listPlayerView: ListPlayerView? = null
             private set
+        var feedImage: ImageView? = null
 
         fun bindData(feed: Feed?) {
             feed ?: return
             if (binding is LayoutFeedTypeImageBinding) {
+                feedImage = binding.ivFeed
                 binding.feed = feed
                 binding.ivFeed.bindData(feed.cover, feed.width, feed.height, 16)
                 binding.interactionLayout.lifecycleOwner = context as? LifecycleOwner

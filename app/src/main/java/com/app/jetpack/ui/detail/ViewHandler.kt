@@ -9,7 +9,7 @@ import androidx.paging.ItemKeyedDataSource
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.jetpack.R
-import com.app.jetpack.databinding.LayoutFeedDetailBottomInateractionBinding
+import com.app.jetpack.databinding.LayoutFeedDetailBottomInteractionBinding
 import com.app.jetpack.model.Comment
 import com.app.jetpack.model.Feed
 import com.app.jetpack.ui.base.MutableItemKeyedDataSource
@@ -19,7 +19,7 @@ abstract class ViewHandler(protected val activity: FragmentActivity) {
     protected lateinit var mFeed: Feed
     protected lateinit var mRecyclerView: RecyclerView
     protected lateinit var mCommentAdapter: FeedCommentAdapter
-    protected lateinit var mInteractionBinding: LayoutFeedDetailBottomInateractionBinding
+    protected lateinit var mInteractionBinding: LayoutFeedDetailBottomInteractionBinding
 
     protected val mViewModel = ViewModelProvider(activity)[FeedDetailViewModel::class.java]
 
@@ -92,4 +92,8 @@ abstract class ViewHandler(protected val activity: FragmentActivity) {
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         mCommentDialog?.takeIf { it.isAdded }?.onActivityResult(requestCode, resultCode, data)
     }
+
+    open fun onResume() {}
+    open fun onBackPressed() {}
+    open fun onPause() {}
 }

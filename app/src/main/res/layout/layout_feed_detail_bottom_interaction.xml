@@ -26,6 +26,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_48"
+        android:layout_gravity="bottom"
         android:background="@{fullScreen?@color/color_transparent:@color/color_white}"
         android:orientation="vertical"
         tools:ignore="RtlSymmetry">
@@ -34,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
             android:background="@color/color_divider"
-            android:visibility="@{ViewUtils.getVisibility(fullScreen)}" />
+            android:visibility="@{ViewUtils.getVisibility(!fullScreen)}" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

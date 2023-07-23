@@ -40,8 +40,25 @@ class FeedDetailActivity : BaseActivity() {
         mViewHandler.bindInitData(feed)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         mViewHandler.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mViewHandler.onResume()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        mViewHandler.onBackPressed()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mViewHandler.onPause()
     }
 }

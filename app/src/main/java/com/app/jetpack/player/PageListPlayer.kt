@@ -12,10 +12,12 @@ import com.google.android.exoplayer2.ui.StyledPlayerView
 class PageListPlayer {
     var exoPlayer: ExoPlayer? = ExoPlayer.Builder(AppGlobals.context).build()
         private set
+
     @SuppressLint("InflateParams")
     var playerView: StyledPlayerView? = LayoutInflater.from(AppGlobals.context)
         .inflate(R.layout.layout_exo_player_view, null, false).safeAs<StyledPlayerView>()
         private set
+
     @SuppressLint("InflateParams")
     var playerControlView: PlayerControlView? = LayoutInflater.from(AppGlobals.context)
         .inflate(R.layout.layout_exo_player_contorller_view, null, false).safeAs<PlayerControlView>()
@@ -26,6 +28,15 @@ class PageListPlayer {
     init {
         playerView?.player = exoPlayer
         playerControlView?.player = exoPlayer
+    }
+
+    fun switchPlayerView(playerView: StyledPlayerView? = null) {
+        if (playerView != null && playerView != this.playerView) {
+            this.playerView?.player = null
+            playerView.player = this.exoPlayer
+        } else {
+            this.playerView?.player = this.exoPlayer
+        }
     }
 
     fun release() {
