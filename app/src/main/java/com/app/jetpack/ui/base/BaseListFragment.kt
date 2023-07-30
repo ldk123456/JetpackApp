@@ -19,7 +19,7 @@ import com.app.lib_common.ext.setVisible
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseListFragment<T : Any, M : BasePagedViewModel<T>>
+abstract class BaseListFragment<T : Any, M : BasePagedViewModel<*, T>>
     : Fragment(), OnRefreshLoadMoreListener {
 
     protected lateinit var binding: LayoutRefreshViewBinding
@@ -30,9 +30,9 @@ abstract class BaseListFragment<T : Any, M : BasePagedViewModel<T>>
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = LayoutRefreshViewBinding.inflate(inflater)
 
+        genericViewModel()
         initRefreshView()
         initRecyclerView()
-        genericViewModel()
 
         return binding.root
     }

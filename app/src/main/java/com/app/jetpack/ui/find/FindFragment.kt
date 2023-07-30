@@ -1,44 +1,37 @@
 package com.app.jetpack.ui.find
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.app.jetpack.core.KEY_TAG_TYPE
 import com.app.jetpack.core.PATH_MAIN_FIND
-import com.app.jetpack.databinding.FragmentFindBinding
+import com.app.jetpack.model.SofaTab
+import com.app.jetpack.ui.sofa.SofaFragment
+import com.app.jetpack.utils.AppConfig
 import com.app.lib_nav_annotation.annotation.FragmentDestination
 
 @FragmentDestination(PATH_MAIN_FIND)
-class FindFragment : Fragment() {
+class FindFragment : SofaFragment() {
 
-    private var _binding: FragmentFindBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
-
-        _binding = FragmentFindBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        childFragmentManager.addFragmentOnAttachListener { _, fragment ->
+            val tagType = fragment.arguments?.getString(KEY_TAG_TYPE)
+            if ("onlyFollow" == tagType) {
+                ViewModelProvider(fragment)[TagListViewModel::class.java].switchTabLiveData.observe(viewLifecycleOwner) {
+                    mBinding.viewPager.setCurrentItem(1, true)
+                }
+            }
         }
-        return root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun getTabFragment(position: Int): Fragment {
+        val tab = getTabConfig()?.tabs?.getOrNull(position)
+        return TagListFragment.newInstance(tab?.tag.orEmpty())
+    }
+
+    override fun getTabConfig(): SofaTab? {
+        return AppConfig.getFindTabConfig()
     }
 }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="tag"
+            type="com.app.jetpack.model.TagList" />
+
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
+        <import type="com.app.jetpack.ui.home.InteractionHelper" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_90">
+
+        <com.app.jetpack.view.BindingImageView
+            android:id="@+id/tag_avatar"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            android:layout_marginStart="@dimen/dp_10"
+            app:image_url="@{tag.icon}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:radius="@{8}" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tag_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:text="@{tag.title}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintBottom_toTopOf="@+id/tag_desc"
+            app:layout_constraintStart_toEndOf="@+id/tag_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tag_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{tag.feedNum+@string/tag_list_item_hot_feed}"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tag_title"
+            app:layout_constraintTop_toBottomOf="@+id/tag_title" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/action_follow"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_28"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:backgroundTint="@color/color_theme"
+            android:gravity="center"
+            android:onClick="@{()->InteractionHelper.toggleTagLike(owner,tag)}"
+            android:text="@{tag.hasFollow?@string/tag_follow:@string/tag_unfollow}"
+            android:textSize="@dimen/sp_13"
+            app:cornerRadius="@dimen/dp_8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginStart="@dimen/dp_10"
+            android:background="@color/color_gray2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

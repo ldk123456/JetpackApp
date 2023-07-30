@@ -21,7 +21,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 
-class HomeViewModel : BasePagedViewModel<Feed>() {
+class HomeViewModel : BasePagedViewModel<Int, Feed>() {
+
+    override val initialLoadKey: Int = 0
+
     @Volatile
     private var mWithCache = true
     private val mCacheLiveData = MutableLiveData<PagedList<Feed>>()
@@ -35,7 +38,7 @@ class HomeViewModel : BasePagedViewModel<Feed>() {
 
     fun getCacheLiveData() = mCacheLiveData
 
-    override fun createDataSource(): DataSource<out Any, Feed> {
+    override fun createDataSource(): DataSource<Int, Feed> {
         return FeedDataSource()
     }
 

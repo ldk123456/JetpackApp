@@ -1,7 +1,6 @@
 package com.app.jetpack.ui.home
 
 import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -11,6 +10,7 @@ import com.alibaba.fastjson2.JSONObject
 import com.app.jetpack.core.DATA_FROM_INTERACTION
 import com.app.jetpack.model.Comment
 import com.app.jetpack.model.Feed
+import com.app.jetpack.model.TagList
 import com.app.jetpack.model.User
 import com.app.jetpack.ui.ShareDialog
 import com.app.jetpack.ui.login.UserManager
@@ -177,5 +177,21 @@ object InteractionHelper {
                     }
                 }
             })
+    }
+
+    @JvmStatic
+    fun toggleTagLike(owner: LifecycleOwner, tagList: TagList) {
+        doAfterLogin(owner) {
+            ApiService.get<JSONObject>("/tag/toggleTagFollow")
+                .addParam("userId", UserManager.getUserId())
+                .addParam("tagId", tagList.tagId)
+                .execute(object : JsonCallback<JSONObject> {
+                    override fun onSuccess(response: ApiResponse<JSONObject>) {
+                        response.body?.let {
+                            tagList.hasFollow = it.getBooleanValue("hasFollow")
+                        }
+                    }
+                })
+        }
     }
 }

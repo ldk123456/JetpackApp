@@ -8,14 +8,16 @@ import com.app.jetpack.ui.base.BasePagedViewModel
 import com.app.jetpack.ui.login.UserManager
 import com.app.lib_network.ApiService
 
-class FeedDetailViewModel : BasePagedViewModel<Comment>() {
+class FeedDetailViewModel : BasePagedViewModel<Int, Comment>() {
+    override val initialLoadKey: Int = 0
+
     private var mItemId: Long = 0L
 
     fun setItemId(itemId: Long) {
         mItemId = itemId
     }
 
-    override fun createDataSource(): DataSource<out Any, Comment> {
+    override fun createDataSource(): DataSource<Int, Comment> {
         return CommentDataSource()
     }
 

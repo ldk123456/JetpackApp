@@ -18,16 +18,20 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import jp.wasabeef.glide.transformations.BlurTransformation
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 @SuppressLint("CheckResult")
-@BindingAdapter(value = ["image_url", "is_circle"], requireAll = false)
-fun setImageUrl(view: BindingImageView, imageUrl: String?, isCircle: Boolean) {
+@BindingAdapter(value = ["image_url", "is_circle", "radius"], requireAll = false)
+fun setImageUrl(view: BindingImageView, imageUrl: String?, isCircle: Boolean, radius: Int) {
     if (imageUrl.isNullOrEmpty()) {
         return
     }
     Glide.with(view).load(imageUrl).apply {
         if (isCircle) {
             transform(CircleCrop())
+        }
+        if (radius > 0) {
+            transform(RoundedCornersTransformation(radius.dp, 0))
         }
     }.apply {
         view.layoutParams.takeIf { it.width > 0 && it.height > 0 }?.let {
@@ -43,7 +47,7 @@ class BindingImageView @JvmOverloads constructor(
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
 
     fun setImageUrl(imageUrl: String?) {
-        setImageUrl(this, imageUrl, false)
+        setImageUrl(this, imageUrl, false, 0)
     }
 
     fun setBlurImageUrl(coverUrl: String?, radius: Int) {

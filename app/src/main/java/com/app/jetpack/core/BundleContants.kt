@@ -18,3 +18,5 @@ const val RESULT_FILE_TYPE = "file_type"
 
 const val KEY_FILE_PATH = "file_path"
 const val KEY_FILE_URL = "file_url"
+
+const val KEY_TAG_TYPE = "tag_type"

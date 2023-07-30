@@ -7,6 +7,7 @@ import com.app.jetpack.model.Destination
 import com.app.jetpack.model.SofaTab
 import com.app.lib_base.BOTTOM_BAR_CONFIG_FILE_NAME
 import com.app.lib_base.DESTINATION_OUTPUT_FILE_NAME
+import com.app.lib_base.FIND_TAB_CONFIG_FILE_NAME
 import com.app.lib_base.SOFA_TAB_CONFIG_FILE_NAME
 import com.app.lib_common.app.AppGlobals
 import java.io.BufferedReader
@@ -18,6 +19,8 @@ object AppConfig {
     private var sBottomBarConfig: BottomBarModel? = null
 
     private var sSofaTab: SofaTab? = null
+
+    private var sFindTab: SofaTab? = null
 
     fun getDestConfig(): Map<String, Destination> {
         if (sDestConfig.isEmpty()) {
@@ -48,6 +51,18 @@ object AppConfig {
             }
         }
         return sSofaTab
+    }
+
+    fun getFindTabConfig(): SofaTab? {
+        if (sFindTab == null) {
+            with(parseFile(FIND_TAB_CONFIG_FILE_NAME)) {
+                sFindTab = JSON.parseObject(this, SofaTab::class.java)
+            }
+            sFindTab?.tabs?.sortedWith { o1, o2 ->
+                o1?.index?.compareTo(o2?.index ?: -1) ?: -1
+            }
+        }
+        return sFindTab
     }
 
     private fun parseFile(fileName: String): String {

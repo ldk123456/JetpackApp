@@ -22,9 +22,9 @@ import com.app.lib_nav_annotation.annotation.FragmentDestination
 import com.google.android.material.tabs.TabLayoutMediator
 
 @FragmentDestination(PATH_MAIN_SOFA)
-class SofaFragment : Fragment() {
+open class SofaFragment : Fragment() {
 
-    private lateinit var mBinding: FragmentSofaBinding
+    protected lateinit var mBinding: FragmentSofaBinding
     private lateinit var mMediator: TabLayoutMediator
 
     private var mTabConfig: SofaTab? = null
@@ -57,7 +57,7 @@ class SofaFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mTabConfig = AppConfig.getSofaTabConfig()
+        mTabConfig = getTabConfig()
         mTabConfig?.tabs?.forEach {
             if (it?.enable == true) {
                 mTabs.add(it)
@@ -72,7 +72,7 @@ class SofaFragment : Fragment() {
                 override fun createFragment(position: Int): Fragment {
                     var fragment = mFragmentMap[position]
                     if (fragment == null) {
-                        fragment = HomeFragment.newInstance(mTabs[position].tag.orEmpty())
+                        fragment = getTabFragment(position)
                         mFragmentMap[position] = fragment
                     }
                     return fragment
@@ -116,4 +116,8 @@ class SofaFragment : Fragment() {
         super.onDestroy()
         mBinding.viewPager.unregisterOnPageChangeCallback(mOnPageChangeCallback)
     }
+
+    open fun getTabFragment(position: Int): Fragment = HomeFragment.newInstance(mTabs[position].tag.orEmpty())
+
+    open fun getTabConfig() = AppConfig.getSofaTabConfig()
 }
