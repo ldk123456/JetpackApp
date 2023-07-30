@@ -20,41 +20,50 @@ class PageListPlayerDetector(
         }
     }
 
+    private val mScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if (RecyclerView.SCROLL_STATE_IDLE == newState) {
+                postAutoPlay()
+            }
+        }
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            if (dx == 0 && dy == 0) {
+                postAutoPlay()
+            } else {
+                if (mPlayingTarget?.isPlaying() == true
+                    && mPlayingTarget?.isTargetInBounds() == false
+                ) {
+                    mPlayingTarget?.inActive()
+                }
+            }
+        }
+    }
+
     init {
         owner.lifecycle.addObserver(object : LifecycleEventObserver {
             override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
                 if (Lifecycle.Event.ON_DESTROY == event) {
-//                    recyclerView.adapter?.unregisterAdapterDataObserver(mDataObserver)
+                    mPlayingTarget = null
+                    mTargets.clear()
+                    recyclerView.removeCallbacks(mDelayAutoPlay)
+                    recyclerView.removeOnScrollListener(mScrollListener)
                     owner.lifecycle.removeObserver(this)
                 }
             }
         })
         recyclerView.adapter?.registerAdapterDataObserver(mDataObserver)
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (RecyclerView.SCROLL_STATE_IDLE == newState) {
-                    postAutoPlay()
-                }
-            }
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dx == 0 && dy == 0) {
-                    autoPlay()
-                } else {
-                    if (mPlayingTarget?.isPlaying() == true
-                        && mPlayingTarget?.isTargetInBounds() == false
-                    ) {
-                        mPlayingTarget?.inActive()
-                    }
-                }
-            }
-        })
+        recyclerView.addOnScrollListener(mScrollListener)
     }
 
     private fun postAutoPlay() {
         recyclerView.post { autoPlay() }
+    }
+
+    private val mDelayAutoPlay = Runnable {
+        autoPlay()
     }
 
     private fun autoPlay() {

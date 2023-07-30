@@ -112,6 +112,25 @@ open class SofaFragment : Fragment() {
         }
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        getVisibleFragment()?.onHiddenChanged(hidden)
+    }
+
+    override fun onResume() {
+        getVisibleFragment()?.onResume()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        getVisibleFragment()?.onPause()
+        super.onPause()
+    }
+
+    private fun getVisibleFragment(): Fragment? {
+        return childFragmentManager.fragments.firstOrNull { it.isAdded && it.isVisible }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         mBinding.viewPager.unregisterOnPageChangeCallback(mOnPageChangeCallback)

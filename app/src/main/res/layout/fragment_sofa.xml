@@ -15,7 +15,6 @@
         app:tabGravity="center"
         app:tabIndicatorColor="@color/color_theme"
         app:tabIndicatorFullWidth="false"
-        app:tabIndicatorGravity="bottom"
         app:tabIndicatorHeight="@dimen/dp_2"
         app:tabInlineLabel="true"
         app:tabMode="scrollable"

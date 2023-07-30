@@ -3,10 +3,8 @@ package com.app.jetpack.ui.find
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.media.audiofx.DynamicsProcessing.Mbc
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -149,6 +147,7 @@ class TagFeedListActivity : AppCompatActivity(), OnRefreshLoadMoreListener {
 
     override fun onResume() {
         super.onResume()
+        mShouldPause = true
         mPlayDetector.onResume()
     }
 
