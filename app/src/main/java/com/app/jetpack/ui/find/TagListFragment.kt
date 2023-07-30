@@ -37,10 +37,12 @@ class TagListFragment : BaseListFragment<TagList, TagListViewModel>() {
                 }
             }
         }
+        binding.recyclerView.removeItemDecorationAt(0)
+        mViewModel?.setTagType(mTagType)
+
     }
 
     override fun getAdapter(): PagedListAdapter<TagList, out RecyclerView.ViewHolder> {
-        mViewModel?.setTagType(mTagType)
         return TagListAdapter(requireActivity())
     }
 
@@ -53,16 +55,18 @@ class TagListFragment : BaseListFragment<TagList, TagListViewModel>() {
         val tagId = currentList.lastOrNull()?.tagId ?: 0
         mViewModel?.loadData(tagId, object : ItemKeyedDataSource.LoadCallback<TagList>() {
             override fun onResult(data: List<TagList>) {
-                val dataSource =
-                    object : MutableItemKeyedDataSource<Long, TagList>(mViewModel?.getDataSource().safeAs()!!) {
-                        override fun getKey(item: TagList): Long {
-                            return item.tagId
-                        }
-                    }
-                dataSource.data.addAll(currentList)
-                dataSource.data.addAll(data)
                 if (data.isNotEmpty()) {
+                    val dataSource =
+                        object : MutableItemKeyedDataSource<Long, TagList>(mViewModel?.getDataSource().safeAs()!!) {
+                            override fun getKey(item: TagList): Long {
+                                return item.tagId
+                            }
+                        }
+                    dataSource.data.addAll(currentList)
+                    dataSource.data.addAll(data)
                     submitList(dataSource.buildNewPagedList(currentList.config))
+                } else {
+                    finishRefresh(false)
                 }
             }
         })

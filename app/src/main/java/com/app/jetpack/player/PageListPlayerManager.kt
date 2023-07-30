@@ -50,6 +50,6 @@ object PageListPlayerManager {
 
     fun release(pageName: String?) {
         val pageKey = pageName.orEmpty()
-        sPageListPlayerMap[pageKey]?.release()
+        sPageListPlayerMap.remove(pageKey)?.release()
     }
 }

@@ -24,7 +24,7 @@ class PageListPlayerDetector(
         owner.lifecycle.addObserver(object : LifecycleEventObserver {
             override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
                 if (Lifecycle.Event.ON_DESTROY == event) {
-                    recyclerView.adapter?.unregisterAdapterDataObserver(mDataObserver)
+//                    recyclerView.adapter?.unregisterAdapterDataObserver(mDataObserver)
                     owner.lifecycle.removeObserver(this)
                 }
             }

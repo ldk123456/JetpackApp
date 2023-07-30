@@ -1,6 +1,5 @@
 package com.app.jetpack.ui.find
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
@@ -28,7 +27,11 @@ class TagListAdapter(private val activity: FragmentActivity) : BasePagedListAdap
     }
 
     override fun onBindDataViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindData(activity, getItem(position))
+        val item = getItem(position) ?: return
+        holder.bindData(activity, item)
+        holder.itemView.setOnClickListener {
+            TagFeedListActivity.startActivity(activity, item)
+        }
     }
 
     class ViewHolder(val binding: LayoutTagListItemBinding) : RecyclerView.ViewHolder(binding.root) {

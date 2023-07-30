@@ -61,13 +61,9 @@ class HomeViewModel : BasePagedViewModel<Int, Feed>() {
         }
     }
 
-    private var first = true
-
     private fun loadData(key: Int, count: Int, callback: ItemKeyedDataSource.LoadCallback<Feed>) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (key > 0 && first) {
-                first = false
-                delay(5000)
+            if (key > 0) {
                 mLoadAfter.set(true)
             }
             val request = ApiService.get<ArrayList<Feed>>("/feeds/queryHotFeedsList")

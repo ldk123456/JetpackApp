@@ -17,11 +17,12 @@ import com.app.jetpack.model.Feed
 import com.app.jetpack.ui.detail.FeedDetailActivity
 import com.app.jetpack.view.ListPlayerView
 import com.app.lib_common.app.LiveDataBus
+import com.app.lib_common.base.BasePagedListAdapter
 
 open class FeedAdapter(
     private val context: Context,
     private val category: String
-) : PagedListAdapter<Feed, FeedAdapter.ViewHolder>(
+) : BasePagedListAdapter<Feed, FeedAdapter.ViewHolder>(
     object : DiffUtil.ItemCallback<Feed>() {
         override fun areItemsTheSame(oldItem: Feed, newItem: Feed): Boolean {
             return oldItem.id == newItem.id
@@ -32,12 +33,11 @@ open class FeedAdapter(
         }
     }) {
 
-
-    override fun getItemViewType(position: Int): Int {
+    override fun getDataItemViewType(position: Int): Int {
         return getItem(position)?.itemType ?: Feed.TYPE_IMAGE
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateDataViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(context)
         return if (viewType == Feed.TYPE_IMAGE) {
             LayoutFeedTypeImageBinding.inflate(inflater, parent, false)
@@ -48,7 +48,7 @@ open class FeedAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindDataViewHolder(holder: ViewHolder, position: Int) {
         val feed = getItem(position) ?: return
         holder.bindData(feed)
         holder.itemView.setOnClickListener {

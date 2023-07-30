@@ -29,10 +29,11 @@ abstract class BaseListFragment<T : Any, M : BasePagedViewModel<*, T>>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = LayoutRefreshViewBinding.inflate(inflater)
+        binding.root.fitsSystemWindows = true
 
-        genericViewModel()
         initRefreshView()
         initRecyclerView()
+        genericViewModel()
 
         return binding.root
     }

@@ -31,3 +31,11 @@ inline val @receiver:DrawableRes Int.drawable: Drawable
 @get:ColorInt
 inline val @receiver:ColorRes Int.color: Int
     get() = ContextCompat.getColor(AppGlobals.context, this)
+
+fun Int.convertTagFeedList(): String {
+    return if (this < 10000) {
+        "${this}人观看"
+    } else {
+        "${this / 10000}万人观看"
+    }
+}

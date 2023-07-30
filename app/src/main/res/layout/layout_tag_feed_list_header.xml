@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="tag"
+            type="com.app.jetpack.model.TagList" />
+
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
+        <import type="com.app.lib_common.ext.IntUtils" />
+
+        <import type="com.app.lib_common.ext.StringUtils" />
+
+        <import type="com.app.lib_common.ext.ViewUtils" />
+
+        <import type="com.app.jetpack.ui.home.InteractionHelper" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:paddingBottom="@dimen/dp_10">
+
+        <com.app.jetpack.view.BindingImageView
+            android:id="@+id/header_background"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_200"
+            android:scaleType="centerCrop"
+            app:image_url="@{tag.background}"
+            app:is_circle="@{false}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="@{tag.title}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_18"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header_background" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/header_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:onClick="@{()->InteractionHelper.toggleTagLike(owner,tag)}"
+            android:text="@{tag.hasFollow?@string/tag_follow:@string/tag_unfollow}"
+            android:textColor="@color/color_theme"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header_background" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/header_intro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="@{tag.intro}"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/sp_13"
+            android:visibility="@{StringUtils.getVisibility(tag.intro)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/header_tag_watcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="@{IntUtils.convertTagFeedList(tag.enterNum)}"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/sp_13"
+            android:visibility="@{ViewUtils.getVisibility(tag.enterNum>0)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header_intro" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

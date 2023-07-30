@@ -3,6 +3,7 @@ package com.app.jetpack.model
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.app.jetpack.BR
+import java.io.Serializable
 
 data class TagList(
     var id: Int = 0,
@@ -15,7 +16,7 @@ data class TagList(
     var tagId: Long = 0L,
     var enterNum: Int = 0,
     var followNum: Int = 0,
-    ) : BaseObservable() {
+) : Serializable, BaseObservable() {
     @get:Bindable
     var hasFollow: Boolean = false
         set(value) {

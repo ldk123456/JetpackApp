@@ -46,15 +46,15 @@ class HomeFragment : BaseListFragment<Feed, HomeViewModel>() {
 
     override fun getAdapter(): PagedListAdapter<Feed, out RecyclerView.ViewHolder> {
         return object : FeedAdapter(requireContext(), mFeedType) {
-            override fun onViewAttachedToWindow(holder: ViewHolder) {
-                super.onViewAttachedToWindow(holder)
+            override fun onDataViewAttachedToWindow(holder: ViewHolder) {
+                super.onDataViewAttachedToWindow(holder)
                 if (holder.isVideoItem()) {
                     mPlayerDetector.addTarget(holder.listPlayerView)
                 }
             }
 
-            override fun onViewDetachedFromWindow(holder: ViewHolder) {
-                super.onViewDetachedFromWindow(holder)
+            override fun onDataViewDetachedToWindow(holder: ViewHolder) {
+                super.onDataViewDetachedToWindow(holder)
                 mPlayerDetector.removeTarget(holder.listPlayerView)
             }
 
