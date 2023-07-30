@@ -22,7 +22,6 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.app.jetpack.R
-import com.app.jetpack.core.PATH_MAIN_PUBLISH
 import com.app.jetpack.core.RESULT_FILE_HEIGHT
 import com.app.jetpack.core.RESULT_FILE_PATH
 import com.app.jetpack.core.RESULT_FILE_TYPE
@@ -31,13 +30,11 @@ import com.app.jetpack.databinding.ActivityCaptureBinding
 import com.app.jetpack.view.RecordView
 import com.app.lib_common.base.BaseActivity
 import com.app.lib_common.util.FileUtil
-import com.app.lib_nav_annotation.annotation.ActivityDestination
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-@ActivityDestination(PATH_MAIN_PUBLISH)
 class CaptureActivity : BaseActivity(), RecordView.OnRecordListener {
 
     companion object {

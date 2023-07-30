@@ -4,6 +4,8 @@
 package com.app.lib_common.ext
 
 import android.graphics.drawable.Drawable
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import com.app.lib_common.app.AppGlobals
@@ -25,3 +27,7 @@ fun Int?.convertFeedUgc(): String {
 inline val @receiver:DrawableRes Int.drawable: Drawable
     get() = ContextCompat.getDrawable(AppGlobals.context, this)
         ?: throw IllegalArgumentException("illegal drawable res id")
+
+@get:ColorInt
+inline val @receiver:ColorRes Int.color: Int
+    get() = ContextCompat.getColor(AppGlobals.context, this)

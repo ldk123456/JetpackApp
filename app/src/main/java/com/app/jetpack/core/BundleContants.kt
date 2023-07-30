@@ -15,3 +15,6 @@ const val RESULT_FILE_PATH = "file_path"
 const val RESULT_FILE_WIDTH = "file_width"
 const val RESULT_FILE_HEIGHT = "file_height"
 const val RESULT_FILE_TYPE = "file_type"
+
+const val KEY_FILE_PATH = "file_path"
+const val KEY_FILE_URL = "file_url"

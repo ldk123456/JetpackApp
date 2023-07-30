@@ -3,6 +3,7 @@ package com.app.jetpack.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.paging.ItemKeyedDataSource
+import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.app.jetpack.core.KEY_FEED_TYPE
@@ -59,6 +60,13 @@ class HomeFragment : BaseListFragment<Feed, HomeViewModel>() {
 
             override fun onStartFeedDetailActivity(feed: Feed) {
                 mShouldPause = Feed.TYPE_VIDEO == feed.itemType
+            }
+
+            override fun onCurrentListChanged(previousList: PagedList<Feed>?, currentList: PagedList<Feed>?) {
+                super.onCurrentListChanged(previousList, currentList)
+                if (previousList != null && currentList != null && !currentList.containsAll(previousList)) {
+                    binding.recyclerView.scrollToPosition(0)
+                }
             }
         }
     }

@@ -89,5 +89,7 @@ dependencies {
 
     api 'com.aliyun.dpa:oss-android-sdk:+'
 
+    api 'androidx.work:work-runtime-ktx:2.8.0'
+
     api project(':lib_base')
 }

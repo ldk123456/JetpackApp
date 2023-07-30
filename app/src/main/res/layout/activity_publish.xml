@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    tools:context=".ui.publish.PublishActivity">
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_48"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/action_close"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="@dimen/dp_35"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_10"
+            android:padding="@dimen/dp_6"
+            android:src="@drawable/icon_close" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/publish_title"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"
+            tools:ignore="RelativeOverlap" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/action_publish"
+            android:layout_width="@dimen/dp_70"
+            android:layout_height="@dimen/dp_30"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:backgroundTint="@color/color_theme"
+            android:gravity="center"
+            android:text="@string/publish_button"
+            android:textColor="@color/color_white"
+            app:cornerRadius="@dimen/dp_15" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_2"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_gray2" />
+
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/input_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:gravity="start|top"
+        android:hint="@string/publish_edit_hint"
+        android:maxLines="100"
+        android:minHeight="@dimen/dp_100"
+        android:padding="@dimen/dp_16"
+        android:textColor="@color/black"
+        android:textColorHint="@color/color_999999"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_bar" />
+
+    <View
+        android:id="@+id/input_line"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_2"
+        android:background="@color/color_gray2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_view" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/action_add_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_25"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_16"
+        android:backgroundTint="@color/color_white"
+        android:gravity="center"
+        android:paddingStart="@dimen/dp_10"
+        android:text="@string/publish_add_tag"
+        android:textColor="@color/color_theme"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        app:cornerRadius="@dimen/dp_13"
+        app:icon="@drawable/ic_add_club"
+        app:iconGravity="textEnd"
+        app:iconPadding="@dimen/dp_2"
+        app:iconTint="@color/color_theme"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_line"
+        app:strokeColor="@color/color_theme"
+        app:strokeWidth="@dimen/dp_1"
+        tools:ignore="RtlSymmetry" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/action_add_file"
+        android:layout_width="@dimen/dp_80"
+        android:layout_height="@dimen/dp_80"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_10"
+        android:src="@drawable/ic_add_file"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/action_add_tag" />
+
+    <FrameLayout
+        android:id="@+id/file_container"
+        android:layout_width="@dimen/dp_120"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_16"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/action_add_tag"
+        tools:visibility="visible">
+
+        <com.app.jetpack.view.BindingImageView
+            android:id="@+id/cover"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/video_icon"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_video_play" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/action_delete_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|top"
+            android:paddingStart="@dimen/dp_6"
+            android:src="@drawable/icon_close"
+            app:tint="@color/color_white"
+            tools:ignore="RtlSymmetry" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
