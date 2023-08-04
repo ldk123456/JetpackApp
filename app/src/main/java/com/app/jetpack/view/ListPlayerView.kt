@@ -64,8 +64,7 @@ open class ListPlayerView @JvmOverloads constructor(
 
         binding.ivCover.setImageUrl(coverUrl)
         if (width < height) {
-            binding.ivBlurBg.setBlurImageUrl(coverUrl, 10)
-            binding.ivBlurBg.setVisible(true)
+            setBlurImageUrl(binding.ivBlurBg, coverUrl, 10)
         } else {
             binding.ivBlurBg.setVisible(false)
         }

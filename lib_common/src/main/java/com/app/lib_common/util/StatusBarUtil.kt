@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 
 object StatusBarUtil {
     fun fitSystemBar(activity: AppCompatActivity) {
@@ -19,5 +20,17 @@ object StatusBarUtil {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = Color.TRANSPARENT
+    }
+
+    fun lightStatusBar(activity: FragmentActivity, light: Boolean) {
+        val window = activity.window ?: return
+        val decorView = window.decorView
+        var visibility = decorView.systemUiVisibility
+        if (light) {
+            visibility = visibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else {
+            visibility = visibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+        }
+        decorView.systemUiVisibility = visibility
     }
 }

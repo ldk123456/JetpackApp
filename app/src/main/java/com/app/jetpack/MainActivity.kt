@@ -1,6 +1,7 @@
 package com.app.jetpack
 
 import android.os.Bundle
+import androidx.navigation.NavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -14,6 +15,8 @@ class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -22,7 +25,7 @@ class MainActivity : BaseActivity() {
 
         val navView: BottomNavigationView = binding.navView
 
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        navController = findNavController(R.id.nav_host_fragment_activity_main)
         navView.setupWithNavController(navController)
 
         NavGraphBuilder.build(navController, this, R.id.nav_host_fragment_activity_main)
@@ -39,5 +42,16 @@ class MainActivity : BaseActivity() {
             navController.navigate(it.itemId)
             it.title.isNullOrEmpty().not()
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val curPageId = navController.currentDestination?.id
+        val homeId = navController.graph.startDestinationId
+        if (curPageId != homeId) {
+            binding.navView.selectedItemId = homeId
+            return
+        }
+        finish()
     }
 }

@@ -1,22 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.my.MyFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/text_notifications"
+    <data>
+
+        <variable
+            name="user"
+            type="com.app.jetpack.model.User" />
+
+        <import type="com.app.lib_common.ext.IntUtils" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        tools:context=".ui.my.MyFragment">
+
+        <com.app.jetpack.view.BindingImageView
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_200"
+            android:scaleType="fitXY"
+            app:blur_url="@{user.avatar}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:radius="@{50}" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/action_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:fitsSystemWindows="true"
+            android:src="@drawable/icon_logout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.app.jetpack.view.BindingImageView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="@dimen/dp_45"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_75"
+            app:image_url="@{user.avatar}"
+            app:is_circle="@{true}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:radius="@{0}" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_75"
+            android:text="@{user.name}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintStart_toEndOf="@+id/avatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_6"
+            android:text="@{user.description}"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintStart_toEndOf="@+id/avatar"
+            app:layout_constraintTop_toBottomOf="@+id/name" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/go_detail"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_80"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:src="@drawable/ic_right_arrow"
+            android:tint="@color/color_white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_overlap"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_90"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_180"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:background="@color/color_white"
+            app:cardCornerRadius="@dimen/dp_10"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/like_count"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{IntUtils.coverSpannable(user.likeCount,@string/like_count)}"
+                    android:textColor="@color/color_666666" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/fans_count"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{IntUtils.coverSpannable(user.followerCount,@string/fans_count)}"
+                    android:textColor="@color/color_666666" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/follow_count"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{IntUtils.coverSpannable(user.followCount,@string/follow_count)}"
+                    android:textColor="@color/color_666666" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/score_count"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{IntUtils.coverSpannable(user.score,@string/score_count)}"
+                    android:textColor="@color/color_666666" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_90"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:background="@color/color_white"
+            app:cardCornerRadius="@dimen/dp_10"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_overlap">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/user_feed"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_profile_my_post"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:text="@string/fragment_my_feed"
+                    android:textColor="@color/color_333333"
+                    android:textSize="@dimen/sp_12" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/user_comment"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_profile_my_comment"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:text="@string/fragment_my_comment"
+                    android:textColor="@color/color_333333"
+                    android:textSize="@dimen/sp_12" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/user_favorite"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_profile_my_collection"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:text="@string/fragment_my_favorite"
+                    android:textColor="@color/color_333333"
+                    android:textSize="@dimen/sp_12" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/user_history"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_profile_my_read_history"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:text="@string/fragment_my_history"
+                    android:textColor="@color/color_333333"
+                    android:textSize="@dimen/sp_12" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

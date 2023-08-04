@@ -3,7 +3,14 @@
 
 package com.app.lib_common.ext
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -38,4 +45,13 @@ fun Int.convertTagFeedList(): String {
     } else {
         "${this / 10000}万人观看"
     }
+}
+
+fun Int.coverSpannable(intro: String?): String {
+    val len = "$this".length
+    val result = SpannableString("$this${intro.orEmpty()}")
+    result.setSpan(ForegroundColorSpan(Color.BLACK), 0, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    result.setSpan(AbsoluteSizeSpan(16, true), 0, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    result.setSpan(StyleSpan(Typeface.BOLD), 0, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    return result.toString()
 }

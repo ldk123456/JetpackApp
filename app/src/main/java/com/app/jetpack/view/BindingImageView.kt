@@ -40,6 +40,28 @@ fun setImageUrl(view: BindingImageView, imageUrl: String?, isCircle: Boolean, ra
     }.into(view)
 }
 
+@BindingAdapter(value = ["blur_url", "radius"], requireAll = false)
+fun setBlurImageUrl(view: BindingImageView, blurUrl: String?, radius: Int) {
+    if (blurUrl.isNullOrEmpty()) {
+        return
+    }
+    Glide.with(view).load(blurUrl)
+        .override(radius)
+        .transform(BlurTransformation())
+        .dontAnimate()
+        .into(object : CustomTarget<Drawable>() {
+            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                view.background = resource
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                placeholder?.let {
+                    view.background = it
+                }
+            }
+        })
+}
+
 class BindingImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -48,27 +70,6 @@ class BindingImageView @JvmOverloads constructor(
 
     fun setImageUrl(imageUrl: String?) {
         setImageUrl(this, imageUrl, false, 0)
-    }
-
-    fun setBlurImageUrl(coverUrl: String?, radius: Int) {
-        if (coverUrl.isNullOrEmpty()) {
-            return
-        }
-        Glide.with(this).load(coverUrl)
-            .override(50)
-            .transform(BlurTransformation())
-            .dontAnimate()
-            .into(object : CustomTarget<Drawable>() {
-                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                    background = resource
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    placeholder?.let {
-                        background = it
-                    }
-                }
-            })
     }
 
     fun bindData(

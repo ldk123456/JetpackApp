@@ -5,7 +5,11 @@ import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.app.jetpack.model.User
+import com.app.lib_common.app.AppGlobals
+import com.app.lib_network.ApiService
 import com.app.lib_network.cache.CacheManager
+import com.app.lib_network.core.JsonCallback
+import com.app.lib_network.response.ApiResponse
 
 object UserManager {
     private const val KEY_CACHE_USER = "cache_user"
@@ -40,4 +44,31 @@ object UserManager {
     fun getUser() = if (isLogin()) mUser else null
 
     fun getUserId() = getUser()?.userId ?: 0
+
+    fun update(): LiveData<out User?> {
+        if (!isLogin()) {
+            return login(AppGlobals.context)
+        }
+        val liveData = MutableLiveData<User?>()
+        ApiService.get<User>("/user/query")
+            .addParam("userId", getUserId())
+            .execute(object : JsonCallback<User> {
+                override fun onSuccess(response: ApiResponse<User>) {
+                    response.body?.let {
+                        save(it)
+                    }
+                    liveData.postValue(response.body)
+                }
+
+                override fun onError(response: ApiResponse<User>) {
+                    liveData.postValue(null)
+                }
+            })
+        return liveData
+    }
+
+    fun logout() {
+        CacheManager.delete(KEY_CACHE_USER, mUser)
+        mUser = null
+    }
 }

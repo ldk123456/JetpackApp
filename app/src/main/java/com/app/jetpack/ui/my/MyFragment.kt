@@ -5,39 +5,41 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.app.jetpack.R
 import com.app.jetpack.core.PATH_MAIN_MY
 import com.app.jetpack.databinding.FragmentMyBinding
+import com.app.jetpack.ui.login.UserManager
 import com.app.lib_nav_annotation.annotation.FragmentDestination
 
 @FragmentDestination(PATH_MAIN_MY, needLogin = true)
 class MyFragment : Fragment() {
+    private lateinit var mBinding: FragmentMyBinding
 
-    private var _binding: FragmentMyBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val notificationsViewModel = ViewModelProvider(this)[MyViewModel::class.java]
-
-        _binding = FragmentMyBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        mBinding = FragmentMyBinding.inflate(inflater, container, false)
+        return mBinding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mBinding.user = UserManager.getUser()
+        UserManager.update().observe(viewLifecycleOwner) {
+            mBinding.user = it
+        }
+        mBinding.actionLogout.setOnClickListener {
+            AlertDialog.Builder(requireActivity())
+                .setMessage(R.string.fragment_my_logout)
+                .setPositiveButton(R.string.fragment_my_logout_ok) { dialog, _ ->
+                    dialog.dismiss()
+                    UserManager.logout()
+                    requireActivity().onBackPressed()
+                }
+                .setNegativeButton(R.string.fragment_my_logout_cancel, null)
+                .create()
+                .show()
+        }
     }
 }
