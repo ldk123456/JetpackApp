@@ -13,6 +13,7 @@ import com.app.lib_common.ext.dp
 import com.app.lib_common.ext.getScreenWidth
 import com.app.lib_common.ext.safeAs
 import com.app.lib_common.ext.setVisible
+import com.app.lib_common.util.ViewHelper.setViewOutline
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.target.CustomTarget
@@ -67,6 +68,10 @@ class BindingImageView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
+
+    init {
+        setViewOutline(attrs, defStyleAttr, 0)
+    }
 
     fun setImageUrl(imageUrl: String?) {
         setImageUrl(this, imageUrl, false, 0)

@@ -38,7 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@ActivityDestination(PATH_MAIN_PUBLISH)
+@ActivityDestination(PATH_MAIN_PUBLISH, needLogin = true)
 class PublishActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mBinding: ActivityPublishBinding

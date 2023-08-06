@@ -10,13 +10,22 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.app.jetpack.R
 import com.app.jetpack.core.PATH_MAIN_MY
+import com.app.jetpack.core.TAB_TYPE_ALL
+import com.app.jetpack.core.TAB_TYPE_COMMENT
+import com.app.jetpack.core.TAB_TYPE_FEED
 import com.app.jetpack.databinding.FragmentMyBinding
 import com.app.jetpack.ui.login.UserManager
+import com.app.lib_common.util.StatusBarUtil
 import com.app.lib_nav_annotation.annotation.FragmentDestination
 
 @FragmentDestination(PATH_MAIN_MY, needLogin = true)
 class MyFragment : Fragment() {
     private lateinit var mBinding: FragmentMyBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        StatusBarUtil.lightStatusBar(requireActivity(), false)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentMyBinding.inflate(inflater, container, false)
@@ -41,5 +50,19 @@ class MyFragment : Fragment() {
                 .create()
                 .show()
         }
+        mBinding.goDetail.setOnClickListener {
+            ProfileActivity.startActivity(requireActivity(), TAB_TYPE_ALL)
+        }
+        mBinding.userFeed.setOnClickListener {
+            ProfileActivity.startActivity(requireActivity(), TAB_TYPE_FEED)
+        }
+        mBinding.userComment.setOnClickListener {
+            ProfileActivity.startActivity(requireActivity(), TAB_TYPE_COMMENT)
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        StatusBarUtil.lightStatusBar(requireActivity(), hidden)
     }
 }

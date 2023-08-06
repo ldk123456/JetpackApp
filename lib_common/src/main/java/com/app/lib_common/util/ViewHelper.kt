@@ -18,8 +18,8 @@ object ViewHelper {
             return
         }
         val array = context.obtainStyledAttributes(attrs, R.styleable.ViewOutlineStrategy, defStyleAttr, defStyleRes)
-        val radius = array.getDimensionPixelSize(R.styleable.ViewOutlineStrategy_radius, 0)
-        val radiusSide = array.getInt(R.styleable.ViewOutlineStrategy_radiusSide, -1)
+        val radius = array.getDimensionPixelSize(R.styleable.ViewOutlineStrategy_clip_radius, 0)
+        val radiusSide = array.getInt(R.styleable.ViewOutlineStrategy_clip_side, -1)
         array.recycle()
         setViewOutline(radius, radiusSide)
     }

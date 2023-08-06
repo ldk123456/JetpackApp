@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -50,4 +50,5 @@
     <dimen name="sp_15">15sp</dimen>
     <dimen name="dp_75">75dp</dimen>
     <dimen name="dp_180">180dp</dimen>
+    <dimen name="px_2" tools:ignore="PxUsage">2px</dimen>
 </resources>

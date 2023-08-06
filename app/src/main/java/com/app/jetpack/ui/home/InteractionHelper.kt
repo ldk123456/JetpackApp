@@ -2,6 +2,7 @@ package com.app.jetpack.ui.home
 
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -193,5 +194,31 @@ object InteractionHelper {
                     }
                 })
         }
+    }
+
+    @JvmStatic
+    fun deleteFeed(activity: FragmentActivity, itemId: Long): LiveData<Boolean> {
+        val liveData = MutableLiveData<Boolean>()
+        AlertDialog.Builder(activity)
+            .setMessage("确定要删除该条帖子吗？？")
+            .setNegativeButton("删除") { dialog, _ ->
+                dialog.dismiss();
+                deleteFeedInternal(itemId, liveData);
+            }.setPositiveButton("取消", null)
+            .create().show();
+        return liveData
+    }
+
+    private fun deleteFeedInternal(itemId: Long, liveData: MutableLiveData<Boolean>) {
+        ApiService.get<JSONObject>("/feeds/deleteFeed")
+            .addParam("itemId", itemId)
+            .addParam("userId", UserManager.getUserId())
+            .execute(object : JsonCallback<JSONObject> {
+                override fun onSuccess(response: ApiResponse<JSONObject>) {
+                    response.body?.let {
+                        liveData.postValue(it.getBooleanValue("result"))
+                    }
+                }
+            })
     }
 }

@@ -4,13 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.app.jetpack.R
 import com.app.jetpack.core.DATA_FROM_INTERACTION
+import com.app.jetpack.databinding.LayoutFeedTopCommentBinding
+import com.app.jetpack.databinding.LayoutFeedTypeCommentBinding
 import com.app.jetpack.databinding.LayoutFeedTypeImageBinding
 import com.app.jetpack.databinding.LayoutFeedTypeVideoBinding
 import com.app.jetpack.model.Feed
@@ -20,8 +24,8 @@ import com.app.lib_common.app.LiveDataBus
 import com.app.lib_common.base.BasePagedListAdapter
 
 open class FeedAdapter(
-    private val context: Context,
-    private val category: String
+    protected val context: Context,
+    protected val category: String
 ) : BasePagedListAdapter<Feed, FeedAdapter.ViewHolder>(
     object : DiffUtil.ItemCallback<Feed>() {
         override fun areItemsTheSame(oldItem: Feed, newItem: Feed): Boolean {
@@ -34,18 +38,17 @@ open class FeedAdapter(
     }) {
 
     override fun getDataItemViewType(position: Int): Int {
-        return getItem(position)?.itemType ?: Feed.TYPE_IMAGE
+        return when (getItem(position)?.itemType) {
+            Feed.TYPE_IMAGE -> R.layout.layout_feed_type_image
+            Feed.TYPE_VIDEO -> R.layout.layout_feed_type_video
+            else -> 0
+        }
     }
 
     override fun onCreateDataViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(context)
-        return if (viewType == Feed.TYPE_IMAGE) {
-            LayoutFeedTypeImageBinding.inflate(inflater, parent, false)
-        } else {
-            LayoutFeedTypeVideoBinding.inflate(inflater, parent, false)
-        }.let {
-            ViewHolder(it)
-        }
+        val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, viewType, parent, false)
+        return ViewHolder((binding))
     }
 
     override fun onBindDataViewHolder(holder: ViewHolder, position: Int) {
@@ -87,16 +90,23 @@ open class FeedAdapter(
 
         fun bindData(feed: Feed?) {
             feed ?: return
-            if (binding is LayoutFeedTypeImageBinding) {
-                feedImage = binding.ivFeed
-                binding.feed = feed
-                binding.ivFeed.bindData(feed.cover, feed.width, feed.height, 16)
-                binding.interactionLayout.lifecycleOwner = context as? LifecycleOwner
-            } else if (binding is LayoutFeedTypeVideoBinding) {
-                binding.feed = feed
-                binding.listPlayerView.bindData(category, feed.cover, feed.url, feed.width, feed.height)
-                binding.interactionLayout.lifecycleOwner = context as? LifecycleOwner
-                listPlayerView = binding.listPlayerView
+            binding.setVariable(com.app.jetpack.BR.feed, feed)
+            when (binding) {
+                is LayoutFeedTypeImageBinding -> {
+                    feedImage = binding.ivFeed
+                    binding.ivFeed.bindData(feed.cover, feed.width, feed.height, 16)
+                    binding.interactionLayout.lifecycleOwner = context as? LifecycleOwner
+                }
+
+                is LayoutFeedTypeVideoBinding -> {
+                    binding.listPlayerView.bindData(category, feed.cover, feed.url, feed.width, feed.height)
+                    binding.interactionLayout.lifecycleOwner = context as? LifecycleOwner
+                    listPlayerView = binding.listPlayerView
+                }
+
+                is LayoutFeedTypeCommentBinding -> {
+                    binding.interactionBinding.lifecycleOwner = context as? LifecycleOwner
+                }
             }
         }
 

@@ -36,8 +36,8 @@
     </style>
 
     <declare-styleable name="ViewOutlineStrategy">
-        <attr name="radius" format="dimension" />
-        <attr name="radiusSide" format="enum">
+        <attr name="clip_radius" format="dimension" />
+        <attr name="clip_side" format="enum">
             <enum name="all" value="0" />
             <enum name="left" value="1" />
             <enum name="top" value="2" />

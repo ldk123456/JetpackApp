@@ -22,7 +22,7 @@
         <import type="com.app.jetpack.ui.home.InteractionHelper" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.app.lib_common.view.CornerConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_16"
@@ -31,7 +31,9 @@
         android:paddingStart="@dimen/dp_10"
         android:paddingEnd="@dimen/dp_10"
         android:paddingBottom="@dimen/dp_10"
-        android:visibility="@{ViewUtils.getVisibility(comment != null)}">
+        android:visibility="@{ViewUtils.getVisibility(comment != null)}"
+        app:clip_radius="@dimen/dp_6"
+        app:clip_side="all">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
@@ -137,5 +139,5 @@
             android:visibility="@{StringUtils.getVisibility(comment.imageUrl)}"
             app:constraint_referenced_ids="iv_comment,iv_play" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.app.lib_common.view.CornerConstraintLayout>
 </layout>

@@ -22,3 +22,8 @@ const val KEY_FILE_URL = "file_url"
 const val KEY_TAG_TYPE = "tag_type"
 const val KEY_TAG_LIST = "tag_list"
 const val KEY_TAG_FEED_LIST = "tag_feed_list"
+
+const val KEY_TAB_TYPE = "key_tab_type"
+const val TAB_TYPE_ALL = "tab_all"
+const val TAB_TYPE_FEED = "tab_feed"
+const val TAB_TYPE_COMMENT = "tab_comment"

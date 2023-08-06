@@ -38,6 +38,7 @@ class VideoViewHandler(activity: FragmentActivity) : ViewHandler(activity) {
                     setViewAppearance(fullscreen)
                 }
             })
+        mVideoBinding.actionClose.setOnClickListener { activity.finish() }
     }
 
     override fun bindInitData(feed: Feed) {

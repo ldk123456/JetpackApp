@@ -47,11 +47,11 @@ fun Int.convertTagFeedList(): String {
     }
 }
 
-fun Int.coverSpannable(intro: String?): String {
+fun Int.coverSpannable(intro: String?): CharSequence {
     val len = "$this".length
     val result = SpannableString("$this${intro.orEmpty()}")
     result.setSpan(ForegroundColorSpan(Color.BLACK), 0, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     result.setSpan(AbsoluteSizeSpan(16, true), 0, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     result.setSpan(StyleSpan(Typeface.BOLD), 0, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-    return result.toString()
+    return result
 }

@@ -24,7 +24,7 @@ class ImageViewHandler(activity: FragmentActivity) : ViewHandler(activity) {
         super.bindInitData(feed)
         mImageBinding.feed = feed
         mImageBinding.owner = activity
-        mImageBinding.ivBack.setOnClickListener { activity.finish() }
+        mImageBinding.actionClose.setOnClickListener { activity.finish() }
         mHeaderBinding = LayoutFeedDetailTypeImageHeaderBinding.inflate(activity.layoutInflater, mRecyclerView, false)
         mHeaderBinding.feed = feed
         mHeaderBinding.owner = activity

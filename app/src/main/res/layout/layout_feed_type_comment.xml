@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="feed"
+            type="com.app.jetpack.model.Feed" />
+
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
+        <import type="com.app.jetpack.model.Feed" />
+
+        <import type="com.app.lib_common.ext.ViewUtils" />
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_10">
+
+        <include
+            layout="@layout/layout_feed_author"
+            app:user="@{feed.topComment.author}" />
+
+        <include
+            layout="@layout/layout_feed_text"
+            app:feedText="@{feed.feeds_text}"
+            app:lines="@{3}" />
+
+        <com.app.lib_common.view.CornerLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:background="@color/color_gray2"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/dp_16"
+            app:clip_radius="@dimen/dp_6"
+            app:clip_side="all"
+            tools:ignore="RtlSymmetry">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:text="@{feed.topComment.commentText}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40">
+
+                <com.app.jetpack.view.BindingImageView
+                    android:id="@+id/icon_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    app:clip_radius="@dimen/dp_6"
+                    app:clip_side="right"
+                    app:image_url="@{feed.cover}" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/icon_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_video_play"
+                    android:visibility="@{ViewUtils.getVisibility(feed.itemType==Feed.TYPE_VIDEO)}" />
+
+            </FrameLayout>
+
+        </com.app.lib_common.view.CornerLinearLayout>
+
+        <include
+            layout="@layout/layout_feed_tag"
+            app:tagText="@{feed.activityText}" />
+
+        <include
+            android:id="@+id/interaction_binding"
+            layout="@layout/layout_feed_interaction"
+            app:feed="@{feed}"
+            app:lifecycleOwner="@{owner}" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>
